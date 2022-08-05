@@ -1,7 +1,7 @@
 import json
 import re
 
-from cloudevents.conversion import to_json
+from cloudevents.conversion import to_json, to_dict
 from cloudevents.http import from_http
 from starlette.requests import Request
 
@@ -24,5 +24,6 @@ class CloudEventRequest(Request):
                         except (json.JSONDecodeError, TypeError, UnicodeDecodeError):
                             pass
                 body = to_json(event)
+                self._json = to_dict(event)
             self._body = body
         return self._body
