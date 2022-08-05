@@ -12,9 +12,9 @@ example_files_expected_to_appear_in_readme = [
     repo_root / "examples/simple_server/example_binary_request.sh",
     repo_root / "examples/simple_server/example_structured_request.sh",
     repo_root / "examples/simple_server/example_response.txt",
-    repo_root / "examples/binary_response_server/example_server.py",
-    repo_root / "examples/binary_response_server/example_request.sh",
-    repo_root / "examples/binary_response_server/example_response.txt",
+    repo_root / "examples/structured_response_server/example_server.py",
+    repo_root / "examples/structured_response_server/example_request.sh",
+    repo_root / "examples/structured_response_server/example_response.txt",
     repo_root / "examples/type_routing/example_server.py",
 ]
 

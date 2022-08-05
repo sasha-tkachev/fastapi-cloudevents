@@ -1,9 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
 
-from fastapi_cloudevents import CloudEvent, CloudEventRoute
+from fastapi_cloudevents import CloudEvent, CloudEventRoute, BinaryCloudEventResponse
 
-app = FastAPI()
+app = FastAPI(default_response_class=BinaryCloudEventResponse)
 app.router.route_class = CloudEventRoute
 
 

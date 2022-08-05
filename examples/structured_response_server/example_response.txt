@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+date: Fri, 05 Aug 2022 23:51:26 GMT
+server: uvicorn
+content-length: 247
+content-type: application/json
+
+{"data":"Hello World!","source":"my:source","id":"3412321f-85b3-4f7f-a551-f4c23a05de3a","type":"com.my-corp.response.v1","specversion":"1.0","time":"2022-08-05T23:51:26.878723+00:00","datacontenttype":"text/plain"}

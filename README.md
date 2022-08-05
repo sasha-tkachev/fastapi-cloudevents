@@ -22,9 +22,9 @@ and install the [development branch of the pydantic feature](https://github.com/
 import uvicorn
 from fastapi import FastAPI
 
-from fastapi_cloudevents import CloudEvent, CloudEventRoute
+from fastapi_cloudevents import CloudEvent, CloudEventRoute, BinaryCloudEventResponse
 
-app = FastAPI()
+app = FastAPI(default_response_class=BinaryCloudEventResponse)
 app.router.route_class = CloudEventRoute
 
 
@@ -59,27 +59,32 @@ curl http://localhost:8000 -i -X POST -H "Content-Type: application/json" \
 Both of the requests will yield a response in the same format:
 ```text
 HTTP/1.1 200 OK
-date: Fri, 05 Aug 2022 22:48:00 GMT
+date: Fri, 05 Aug 2022 23:50:52 GMT
 server: uvicorn
-content-length: 235
+content-length: 13
 content-type: application/json
+ce-specversion: 1.0
+ce-id: 25cd28f0-0605-4a76-b1d8-cffbe3375413
+ce-source: my:source
+ce-type: my.response-type.v1
+ce-time: 2022-08-05T23:50:52.809697+00:00
 
-{"data":"Hello World!","source":"my:source","id":"a6318d09-1d89-436b-8b28-a6e56734c050","type":"my.response-type.v1","specversion":"1.0","time":"2022-08-05T22:48:01.492529+00:00","datacontenttype":"text/plain"}
+"Hello World"
 ```
 
 ### [CloudEvent Type Routing](examples/type_routing)
 ```python
 from typing import Literal, Union
 
+import uvicorn
+from fastapi import FastAPI
 from pydantic import Field
 from typing_extensions import Annotated
 
-import uvicorn
-from fastapi import FastAPI
+from fastapi_cloudevents import (CloudEvent, CloudEventRoute,
+                                 StructuredCloudEventResponse)
 
-from fastapi_cloudevents import CloudEvent, CloudEventRoute
-
-app = FastAPI()
+app = FastAPI(default_response_class=StructuredCloudEventResponse)
 app.router.route_class = CloudEventRoute
 
 
@@ -116,24 +121,25 @@ async def on_event(event: OurEvent) -> CloudEvent:
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8002)
+
 ```
 
-### [Binary Response Example](examples/binary_response_server)
-To send the response in the http CloudEvent binary format, you MAY use the
+### [Structured Response Example](examples/structured_response_server)
+To send the response in the http CloudEvent structured format, you MAY use the
  `BinaryCloudEventResponse` class
  
 ```python
 import uvicorn
 from fastapi import FastAPI
 
-from fastapi_cloudevents import (BinaryCloudEventResponse, CloudEvent,
+from fastapi_cloudevents import (StructuredCloudEventResponse, CloudEvent,
                                  CloudEventRoute)
 
 app = FastAPI()
 app.router.route_class = CloudEventRoute
 
 
-@app.post("/", response_class=BinaryCloudEventResponse)
+@app.post("/", response_class=StructuredCloudEventResponse)
 async def on_event(event: CloudEvent) -> CloudEvent:
     return CloudEvent(
         type="com.my-corp.response.v1", source="my:source", data=event.data,
@@ -150,19 +156,13 @@ curl http://localhost:8001 -i -X POST -d "Hello World!" \
   -H "ce-type: my.request-type.v1" \
   -H "ce-id: 123" \
   -H "ce-source: my-source"
-
 ```
 ```text
 HTTP/1.1 200 OK
-date: Fri, 05 Aug 2022 22:58:14 GMT
+date: Fri, 05 Aug 2022 23:51:26 GMT
 server: uvicorn
-content-length: 14
-content-type: text/plain
-ce-specversion: 1.0
-ce-id: 67f30e64-772d-4395-8939-c7d994dba0a4
-ce-source: my:source
-ce-type: com.my-corp.response.v1
-ce-time: 2022-08-05T22:58:14.648649+00:00
+content-length: 247
+content-type: application/json
 
-"Hello World!"
+{"data":"Hello World!","source":"my:source","id":"3412321f-85b3-4f7f-a551-f4c23a05de3a","type":"com.my-corp.response.v1","specversion":"1.0","time":"2022-08-05T23:51:26.878723+00:00","datacontenttype":"text/plain"}
 ```

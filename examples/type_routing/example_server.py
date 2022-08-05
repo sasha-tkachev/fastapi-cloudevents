@@ -1,14 +1,14 @@
 from typing import Literal, Union
 
+import uvicorn
+from fastapi import FastAPI
 from pydantic import Field
 from typing_extensions import Annotated
 
-import uvicorn
-from fastapi import FastAPI
+from fastapi_cloudevents import (CloudEvent, CloudEventRoute,
+                                 StructuredCloudEventResponse)
 
-from fastapi_cloudevents import CloudEvent, CloudEventRoute
-
-app = FastAPI()
+app = FastAPI(default_response_class=StructuredCloudEventResponse)
 app.router.route_class = CloudEventRoute
 
 
