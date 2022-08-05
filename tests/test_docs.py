@@ -9,9 +9,9 @@ readme = (repo_root / "README.md").read_text()
 
 example_files_expected_to_appear_in_readme = [
     repo_root / "examples/simple_server/server.py",
-    repo_root / "examples/simple_server/binary_client.py",
-    repo_root / "examples/simple_server/structured_client.py",
-
+    repo_root / "examples/simple_server/binary_request.sh",
+    repo_root / "examples/simple_server/structured_request.sh",
+    repo_root / "examples/simple_server/example_response.txt",
     repo_root / "examples/binary_response_server/server.py",
 ]
 

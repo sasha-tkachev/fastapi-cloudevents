@@ -23,7 +23,7 @@ app.router.route_class = CloudEventRoute
 @app.post("/")
 async def on_event(event: CloudEvent) -> CloudEvent:
     return CloudEvent(
-        type="com.my-corp.response.v1", source="my:source", data=event.data
+        type="my.response-type.v1", source="my:source", data=event.data
     )
 
 
@@ -31,37 +31,30 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
-This simple accepts both structured cloudevents (whole event is passed in the
- body) 
-```python
-import requests
-from cloudevents.http import CloudEvent, from_http, to_structured
-
-headers, data = to_structured(
-    CloudEvent(
-        attributes={"type": "com.your-corp.response.v1", "source": "your:source"},
-        data={"hello": "world"},
-    )
-)
-response = requests.post("http://localhost:8000", headers=headers, data=data)
-print(from_http(response.headers, response.content))
+The rout accepts both binary CloudEvents
+```shell script
+curl http://localhost:8000 -i -X POST -d "Hello World!" \
+  -H "Content-Type: text/plain" \
+  -H "ce-specversion: 1.0" \
+  -H "ce-type: my.request-type.v1" \
+  -H "ce-id: 123" \
+  -H "ce-source: my-source"
 ```
 
-And binary cloudevents (only data in passed in the body, while the attributes are
- passed in the header)
-```python
-import requests
-from cloudevents.http import CloudEvent, from_http, to_binary
+And structured CloudEvents 
+```shell script
+curl http://localhost:8000 -i -X POST -H "Content-Type: application/json" \
+  -d '{"data":"Hello World", "source":"my-source", "id":"123", "type":"my.request-type.v1","specversion":"1.0"}'
+```
+Both of the requests will yield a response in the same format:
+```json
+HTTP/1.1 200 OK
+date: Fri, 05 Aug 2022 22:48:00 GMT
+server: uvicorn
+content-length: 235
+content-type: application/json
 
-headers, data = to_binary(
-    CloudEvent(
-        attributes={"type": "com.your-corp.response.v1", "source": "your:source"},
-        data={"hello": "world"},
-    )
-)
-response = requests.post("http://localhost:8000", headers=headers, data=data)
-print(from_http(response.headers, response.content))
-
+{"data":"Hello World!","source":"my:source","id":"a6318d09-1d89-436b-8b28-a6e56734c050","type":"my.response-type.v1","specversion":"1.0","time":"2022-08-05T22:48:01.492529+00:00"}
 ```
 
 ### Binary Responses
