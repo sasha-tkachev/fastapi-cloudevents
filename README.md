@@ -39,7 +39,8 @@ from cloudevents.http import CloudEvent, to_structured
 
 headers, data = to_structured(
     CloudEvent(
-        attributes={"type": "com.your-corp.response.v1", "source": "your:source"}
+        attributes={"type": "com.your-corp.response.v1", "source": "your:source"},
+        data={"hello": "world"},
     )
 )
 print(requests.post("http://localhost:8000", headers=headers, data=data).content)
@@ -47,7 +48,7 @@ print(requests.post("http://localhost:8000", headers=headers, data=data).content
 ```json
 {
   "type":"com.my-corp.response.v1",
-  "data":{"a":"b"},
+  "data":{"hello":"world"},
   "source":"my:source",
   "id":"265b4053-efd6-4f6a-885e-9867dbc80b2a",
   "specversion":"1.0",
@@ -62,11 +63,11 @@ from cloudevents.http import CloudEvent, to_structured
 
 headers, data = to_structured(
     CloudEvent(
-        attributes={"type": "com.your-corp.response.v1", "source": "your:source"}
+        attributes={"type": "com.your-corp.response.v1", "source": "your:source"},
+        data={"hello": "world"},
     )
 )
 print(requests.post("http://localhost:8000", headers=headers, data=data).content)
+
 ```
-
-
 
