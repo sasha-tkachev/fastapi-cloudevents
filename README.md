@@ -35,7 +35,7 @@ This simple accepts both structured cloudevents (whole event is passed in the
  body) 
 ```python
 import requests
-from cloudevents.http import CloudEvent, to_structured
+from cloudevents.http import CloudEvent, from_http, to_structured
 
 headers, data = to_structured(
     CloudEvent(
@@ -43,23 +43,15 @@ headers, data = to_structured(
         data={"hello": "world"},
     )
 )
-print(requests.post("http://localhost:8000", headers=headers, data=data).content)
+response = requests.post("http://localhost:8000", headers=headers, data=data)
+print(from_http(response.headers, response.content))
 ```
-```json
-{
-  "type":"com.my-corp.response.v1",
-  "data":{"hello":"world"},
-  "source":"my:source",
-  "id":"265b4053-efd6-4f6a-885e-9867dbc80b2a",
-  "specversion":"1.0",
-  "time":"2022-08-05T21:28:27.675355+00:00"
-}
-```
+
 And binary cloudevents (only data in passed in the body, while the attributes are
  passed in the header)
 ```python
 import requests
-from cloudevents.http import CloudEvent, to_binary
+from cloudevents.http import CloudEvent, from_http, to_binary
 
 headers, data = to_binary(
     CloudEvent(
@@ -67,7 +59,8 @@ headers, data = to_binary(
         data={"hello": "world"},
     )
 )
-print(requests.post("http://localhost:8000", headers=headers, data=data).content)
+response = requests.post("http://localhost:8000", headers=headers, data=data)
+print(from_http(response.headers, response.content))
 
 ```
 
@@ -95,27 +88,13 @@ async def on_event(event: CloudEvent) -> CloudEvent:
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8001)
 ``` 
+The client side of this server will not change (given a CloudEvent SDK is used)
 
-
-```python
-import requests
-from cloudevents.http import CloudEvent, to_structured
-
-headers, data = to_structured(
-    CloudEvent(
-        attributes={"type": "com.your-corp.response.v1", "source": "your:source"},
-        data={"hello": "world"},
-    )
-)
-
-response = requests.post("http://localhost:8001", headers=headers, data=data)
-print(response.content)
-print(response.headers)
-```
-
+But on the wire the HTTP response content will contain
 ```json
 {"hello": "world"}
 ```
+And the HTTP response headers will contain
 ```json
 {
   "ce-source": "your:source", 

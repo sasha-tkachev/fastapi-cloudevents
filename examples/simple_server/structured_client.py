@@ -1,5 +1,5 @@
 import requests
-from cloudevents.http import CloudEvent, to_structured
+from cloudevents.http import CloudEvent, from_http, to_structured
 
 headers, data = to_structured(
     CloudEvent(
@@ -7,4 +7,5 @@ headers, data = to_structured(
         data={"hello": "world"},
     )
 )
-print(requests.post("http://localhost:8000", headers=headers, data=data).content)
+response = requests.post("http://localhost:8000", headers=headers, data=data)
+print(from_http(response.headers, response.content))

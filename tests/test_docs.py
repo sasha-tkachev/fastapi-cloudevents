@@ -12,7 +12,6 @@ example_files_expected_to_appear_in_readme = [
     repo_root / "examples/simple_server/binary_client.py",
     repo_root / "examples/simple_server/structured_client.py",
 
-    repo_root / "examples/binary_response_server/client.py",
     repo_root / "examples/binary_response_server/server.py",
 ]
 
