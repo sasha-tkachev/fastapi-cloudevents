@@ -1,1 +1,2 @@
-from fastapi_cloudevents.middleware import CloudEventsMiddleware
+from fastapi_cloudevents.cloudevent_route import CloudEventRoute
+from fastapi_cloudevents.cloudevent_request import CloudEventRequest
