@@ -59,9 +59,9 @@ And binary cloudevents (only data in passed in the body, while the attributes ar
  passed in the header)
 ```python
 import requests
-from cloudevents.http import CloudEvent, to_structured
+from cloudevents.http import CloudEvent, to_binary
 
-headers, data = to_structured(
+headers, data = to_binary(
     CloudEvent(
         attributes={"type": "com.your-corp.response.v1", "source": "your:source"},
         data={"hello": "world"},
