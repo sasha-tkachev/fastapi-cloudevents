@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+date: Fri, 05 Aug 2022 22:58:14 GMT
+server: uvicorn
+content-length: 14
+content-type: text/plain
+ce-specversion: 1.0
+ce-id: 67f30e64-772d-4395-8939-c7d994dba0a4
+ce-source: my:source
+ce-type: com.my-corp.response.v1
+ce-time: 2022-08-05T22:58:14.648649+00:00
+
+"Hello World!"
