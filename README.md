@@ -1,4 +1,4 @@
-from cloudevents.pydantic import CloudEvent# fastapi-cloudevents
+# fastapi-cloudevents
 [FastAPI](https://fastapi.tiangolo.com/) [Middleware](https://fastapi.tiangolo.com/tutorial/middleware/) for [CloudEvents](https://cloudevents.io/) Integration
 
 install:
@@ -7,25 +7,66 @@ install:
 pip install fastapi-cloudevents
 ```
    
-example:
+## Examples
 
+### [Simple Example](examples/simple_server)
 ```python
 import uvicorn
 from fastapi import FastAPI
 
-from fastapi_cloudevents.middleware import CloudEventsMiddleware
-from cloudevents.pydantic import CloudEvent
+from fastapi_cloudevents import CloudEvent, CloudEventRoute
 
 app = FastAPI()
+app.router.route_class = CloudEventRoute
 
-app.add_middleware(CloudEventsMiddleware)
 
-
-@app.post("/api/my-endpoint")
+@app.post("/")
 async def on_event(event: CloudEvent) -> CloudEvent:
-    return event
+    return CloudEvent(
+        type="com.my-corp.response.v1", source="my:source", data=event.data
+    )
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
+
+This simple accepts both structured cloudevents (whole event is passed in the
+ body) 
+```python
+import requests
+from cloudevents.http import CloudEvent, to_structured
+
+headers, data = to_structured(
+    CloudEvent(
+        attributes={"type": "com.your-corp.response.v1", "source": "your:source"}
+    )
+)
+print(requests.post("http://localhost:8000", headers=headers, data=data).content)
+```
+```json
+{
+  "type":"com.my-corp.response.v1",
+  "data":{"a":"b"},
+  "source":"my:source",
+  "id":"265b4053-efd6-4f6a-885e-9867dbc80b2a",
+  "specversion":"1.0",
+  "time":"2022-08-05T21:28:27.675355+00:00"
+}
+```
+And binary cloudevents (only data in passed in the body, while the attributes are
+ passed in the header)
+```python
+import requests
+from cloudevents.http import CloudEvent, to_structured
+
+headers, data = to_structured(
+    CloudEvent(
+        attributes={"type": "com.your-corp.response.v1", "source": "your:source"}
+    )
+)
+print(requests.post("http://localhost:8000", headers=headers, data=data).content)
+```
+
+
 
