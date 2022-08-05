@@ -3,10 +3,17 @@
 
 
 ### Install
+This package currently cannot be installed directly from pypi. 
+The reason for it is because it requires the unreleased [pydantic feature](https://github.com/cloudevents/sdk-python/issues/181) in the
+ [cloudevents python sdk](https://github.com/cloudevents/sdk-python)  
 
+If you wish to try out the beta version use
 ```
-pip install fastapi-cloudevents
+pip install fastapi-cloudevents --no-deps
 ```
+and install the [development branch of the pydantic feature](https://github.com/cloudevents/sdk-python/pull/182)
+
+
    
 ## Examples
 
