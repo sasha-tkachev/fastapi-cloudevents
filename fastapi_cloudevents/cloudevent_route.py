@@ -1,9 +1,8 @@
 from typing import Callable
 
 from fastapi.routing import APIRoute
-from starlette.responses import Response
-
 from starlette.requests import Request
+from starlette.responses import Response
 
 from fastapi_cloudevents.cloudevent_request import CloudEventRequest
 
