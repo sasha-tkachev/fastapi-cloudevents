@@ -1,7 +1,7 @@
 import json
 import re
 
-from cloudevents.conversion import to_json, to_dict
+from cloudevents.conversion import to_dict, to_json
 from cloudevents.http import from_http
 from starlette.requests import Request
 
