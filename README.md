@@ -71,3 +71,56 @@ print(requests.post("http://localhost:8000", headers=headers, data=data).content
 
 ```
 
+### Binary Responses
+To send the response in the http CloudEvent binary format, you MAY use the
+ `BinaryCloudEventResponse` class
+ 
+```python
+import uvicorn
+from fastapi import FastAPI
+
+from fastapi_cloudevents import (BinaryCloudEventResponse, CloudEvent,
+                                 CloudEventRoute)
+
+app = FastAPI()
+app.router.route_class = CloudEventRoute
+
+
+@app.post("/", response_class=BinaryCloudEventResponse)
+async def on_event(event: CloudEvent) -> CloudEvent:
+    return CloudEvent(
+        type="com.my-corp.response.v1", source="my:source", data=event.data
+    )
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8001)
+``` 
+
+
+```python
+import requests
+from cloudevents.http import CloudEvent, to_structured
+
+headers, data = to_structured(
+    CloudEvent(
+        attributes={"type": "com.your-corp.response.v1", "source": "your:source"},
+        data={"hello": "world"},
+    )
+)
+
+response = requests.post("http://localhost:8001", headers=headers, data=data)
+print(response.content)
+print(response.headers)
+```
+
+```json
+{"hello": "world"}
+```
+```json
+{
+  "ce-source": "your:source", 
+  "ce-type": "com.your-corp.response.v1", 
+  "ce-time": "2022-08-05T21:56:43.613658+00:00",
+  "ce-id": "b4b47632-9d6e-4de2-8415-1533c3e58f27" 
+}
+```
