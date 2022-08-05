@@ -10,7 +10,8 @@ app.router.route_class = CloudEventRoute
 @app.post("/")
 async def on_event(event: CloudEvent) -> CloudEvent:
     return CloudEvent(
-        type="my.response-type.v1", source="my:source", data=event.data
+        type="my.response-type.v1", source="my:source", data=event.data,
+        datacontenttype=event.datacontenttype
     )
 
 
