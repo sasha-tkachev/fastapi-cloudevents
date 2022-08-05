@@ -59,7 +59,7 @@ content-type: application/json
 {"data":"Hello World!","source":"my:source","id":"a6318d09-1d89-436b-8b28-a6e56734c050","type":"my.response-type.v1","specversion":"1.0","time":"2022-08-05T22:48:01.492529+00:00","datacontenttype":"text/plain"}
 ```
 
-### Binary Responses
+### [Binary Response Example](examples/binary_response_server)
 To send the response in the http CloudEvent binary format, you MAY use the
  `BinaryCloudEventResponse` class
  
