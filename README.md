@@ -67,6 +67,57 @@ content-type: application/json
 {"data":"Hello World!","source":"my:source","id":"a6318d09-1d89-436b-8b28-a6e56734c050","type":"my.response-type.v1","specversion":"1.0","time":"2022-08-05T22:48:01.492529+00:00","datacontenttype":"text/plain"}
 ```
 
+### [CloudEvent Type Routing](examples/type_routing)
+```python
+from typing import Literal, Union
+
+from pydantic import Field
+from typing_extensions import Annotated
+
+import uvicorn
+from fastapi import FastAPI
+
+from fastapi_cloudevents import CloudEvent, CloudEventRoute
+
+app = FastAPI()
+app.router.route_class = CloudEventRoute
+
+
+class MyEvent(CloudEvent):
+    type: Literal["my.type.v1"]
+
+
+class YourEvent(CloudEvent):
+    type: Literal["your.type.v1"]
+
+
+OurEvent = Annotated[Union[MyEvent, YourEvent], Field(discriminator="type")]
+
+_source = "dummy:source"
+
+
+@app.post("/")
+async def on_event(event: OurEvent) -> CloudEvent:
+    if isinstance(event, MyEvent):
+        return CloudEvent(
+            type="my.response-type.v1",
+            source=_source,
+            data=f"got {event.data} from my event!",
+            datacontenttype="text/plain",
+        )
+    else:
+        return CloudEvent(
+            type="your.response-type.v1",
+            source=_source,
+            data=f"got {event.data} from your event!",
+            datacontenttype="text/plain",
+        )
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8002)
+```
+
 ### [Binary Response Example](examples/binary_response_server)
 To send the response in the http CloudEvent binary format, you MAY use the
  `BinaryCloudEventResponse` class
