@@ -1,0 +1,9 @@
+{
+    "data": "got b'Hello World!' from your event!",
+    "source": "dummy:source",
+    "id": "b462731b-1273-4f08-9471-490a6d18625a",
+    "type": "your.response-type.v1",
+    "specversion": "1.0",
+    "time": "2022-08-05T23:25:39.379536+00:00",
+    "datacontenttype": "text/plain"
+}
