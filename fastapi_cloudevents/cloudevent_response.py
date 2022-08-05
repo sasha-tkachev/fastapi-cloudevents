@@ -40,7 +40,9 @@ class BinaryCloudEventResponse(JSONResponse):
         if content is None:
             return headers
         ce_headers, _ = to_binary(from_dict(content))
-        headers += [
+        ce_headers = [
             (k.encode("utf-8"), v.encode("utf-8")) for k, v in ce_headers.items()
         ]
-        return headers
+        result = dict(headers)
+        result.update(ce_headers)
+        return list(result.items())
