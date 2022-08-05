@@ -1,0 +1,1 @@
+from fastapi_cloudevents.middleware import CloudEventsMiddleware
