@@ -1,7 +1,8 @@
 # fastapi-cloudevents
 [FastAPI](https://fastapi.tiangolo.com/) [Middleware](https://fastapi.tiangolo.com/tutorial/middleware/) for [CloudEvents](https://cloudevents.io/) Integration
 
-install:
+
+### Install
 
 ```
 pip install fastapi-cloudevents
