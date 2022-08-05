@@ -1,14 +1,17 @@
-from fastapi_tools.middlewares import SimpleBaseMiddleware
+from starlette.middleware.base import (BaseHTTPMiddleware)
 from starlette.requests import Request
-from starlette.responses import Response
 
 
-class CloudEventsMiddleware(SimpleBaseMiddleware):
-    async def before_request(self, request: Request) -> [Response, None]:
-        pass
+class CloudEventsMiddleware(BaseHTTPMiddleware):
+    def __init__(self, app):
+        super().__init__(app)
 
-    async def after_request(self, request: Request):
-        pass
+    async def dispatch(self, request: Request, call_next):
+        # do something with the request object, for example
+        content_type = request.headers.get("Content-Type")
+        print(content_type)
 
-    async def send(self, message, send, request):
-        pass
+        # process the request and get the response
+        response = await call_next(request)
+
+        return response

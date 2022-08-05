@@ -1,3 +1,2 @@
 fastapi
-fastapi-base-tools>=0.0.5
 cloudevents[pydantic]
