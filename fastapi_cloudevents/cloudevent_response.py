@@ -25,7 +25,7 @@ class StructuredCloudEventResponse(_CloudEventResponse):
     @abstractmethod
     def replace_default_source(self, new_source: str):
         result = json.loads(self.body)
-        result["source"].replace(DEFAULT_SOURCE, new_source)
+        result["source"] = result["source"].replace(DEFAULT_SOURCE, new_source)
         self.body = self.render(result)
 
 
