@@ -6,6 +6,8 @@ from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse
 
+from fastapi_cloudevents.source_injection_middleware import SOURCE_INJECTION_MAGIC
+
 
 class StructuredCloudEventResponse(JSONResponse):
     pass
@@ -45,4 +47,8 @@ class BinaryCloudEventResponse(JSONResponse):
         ]
         result = dict(headers)
         result.update(ce_headers)
+        assert result.get("ce-source") != SOURCE_INJECTION_MAGIC, (
+            "you MUST specify "
+            "the response event source, or use the source injection middleware"
+        )
         return list(result.items())
