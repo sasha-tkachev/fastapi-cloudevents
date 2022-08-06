@@ -2,7 +2,7 @@ import pytest
 from cloudevents.http import from_http
 from starlette.testclient import TestClient
 
-from examples.custom_source_tag.example_server import app
+from examples.custom_default_source.example_server import app
 
 
 @pytest.fixture()

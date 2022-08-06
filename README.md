@@ -170,4 +170,4 @@ content-type: application/json
 ```
 
 ## More Examples
-* [Custom Source Tags](examples/custom_source_tag)
+* [Custom Default Source](examples/custom_default_source)

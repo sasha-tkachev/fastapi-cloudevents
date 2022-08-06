@@ -4,19 +4,15 @@ import uvicorn
 from fastapi import FastAPI
 
 from fastapi_cloudevents import CloudEvent, install_fastapi_cloudevents
+from fastapi_cloudevents.settings import CloudEventSettings
 
 app = FastAPI()
-app = install_fastapi_cloudevents(app)
-
-
-@app.get(
-    "/",
-    tags=[
-        # this tag will cause all events produced by this route to have a "my-source"
-        # as their event source if no source is given
-        "ce-source:my-source",
-    ],
+app = install_fastapi_cloudevents(
+    app, settings=CloudEventSettings(default_source="my-source")
 )
+
+
+@app.get("/")
 async def index() -> CloudEvent:
     i = random.randint(0, 3)
     if i == 0:

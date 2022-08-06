@@ -1,4 +1,3 @@
-import re
 from typing import Callable, Optional
 
 from fastapi.routing import APIRoute
@@ -9,22 +8,11 @@ from fastapi_cloudevents.cloudevent_request import CloudEventRequest
 from fastapi_cloudevents.cloudevent_response import _CloudEventResponse
 from fastapi_cloudevents.settings import CloudEventSettings
 
-_CE_SOURCE_TAG_PREFIX = re.compile(r"^ce-source:", flags=re.IGNORECASE)
 
-
-def _is_source_tag(tag: str):
-    return _CE_SOURCE_TAG_PREFIX.match(tag)
-
-
-def _source_tag_to_source(source_tag: str) -> str:
-    return _CE_SOURCE_TAG_PREFIX.sub("", source_tag)
-
-
-def _route_source(route: APIRoute, request: Request) -> str:
-    try:
-        return next(map(_source_tag_to_source, filter(_is_source_tag, route.tags)))
-    except StopIteration:
-        return str(request.url)
+def _route_source(request: Request, settings: CloudEventSettings):
+    if settings.default_source:
+        return settings.default_source
+    return str(request.url)
 
 
 class _CloudEventRoute(APIRoute):
@@ -38,7 +26,9 @@ class _CloudEventRoute(APIRoute):
                 CloudEventRequest(request.scope, request.receive)
             )
             if isinstance(response, _CloudEventResponse):
-                response.replace_default_source(new_source=_route_source(self, request))
+                response.replace_default_source(
+                    new_source=_route_source(request, self._settings)
+                )
             return response
 
         return custom_route_handler
