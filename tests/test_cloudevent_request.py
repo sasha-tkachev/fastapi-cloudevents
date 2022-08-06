@@ -2,8 +2,10 @@ import pytest
 from cloudevents.http import CloudEvent
 
 from fastapi_cloudevents.cloudevent_request import (
-    _best_effort_fix_json_data_payload, _is_json_content_type,
-    _should_fix_json_data_payload)
+    _best_effort_fix_json_data_payload,
+    _is_json_content_type,
+    _should_fix_json_data_payload,
+)
 
 
 @pytest.mark.parametrize(
@@ -92,3 +94,9 @@ def test_best_effort_event_fixing_should_not_fail_on_invalid_json():
         ).data
         == corrupt_json
     )
+
+
+def test_best_effort_event_fixing_should_fix_valid_json():
+    assert _best_effort_fix_json_data_payload(
+        CloudEvent(attributes={"source": "a", "type": "a"}, data='{"hello": "world"}')
+    ).data == {"hello": "world"}
