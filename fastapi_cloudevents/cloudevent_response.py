@@ -9,7 +9,8 @@ from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse, Response
 
-from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
+from fastapi_cloudevents.cloudevent import (DEFAULT_SOURCE,
+                                            DEFAULT_SOURCE_ENCODED)
 
 
 class _CloudEventResponse:
@@ -90,6 +91,8 @@ class BinaryCloudEventResponse(Response, _CloudEventResponse):
         if content is None:
             return b""
         _, body = to_binary(from_dict(content))
+        if body is None:
+            return b""
         return body
 
     @classmethod
