@@ -1,6 +1,7 @@
 import json
 import typing
 from abc import abstractmethod
+from typing import Any, List, Union
 
 from cloudevents.abstract import AnyCloudEvent
 from cloudevents.conversion import to_binary
@@ -21,6 +22,8 @@ class StructuredCloudEventResponse(_CloudEventResponse):
     """
     Nothing to implement because structured CloudEvents are literally json objects
     """
+
+    raw_headers: List[Union[bytes, Any]]
 
     # https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md#3-envelope
     media_type = "application/cloudevents+json"
