@@ -1,7 +1,7 @@
 import json
 import typing
 from abc import abstractmethod
-from typing import Any, AnyStr, Dict, List, Union, Type
+from typing import Any, AnyStr, Dict, List, Type, Union
 
 from cloudevents.abstract import CloudEvent
 from cloudevents.conversion import to_binary
@@ -10,23 +10,15 @@ from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse, Response
 
 from fastapi_cloudevents import CloudEventSettings
-from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
+from fastapi_cloudevents.cloudevent import (DEFAULT_SOURCE,
+                                            DEFAULT_SOURCE_ENCODED)
 from fastapi_cloudevents.content_type import is_json_content_type_event
 
 
 class _CloudEventResponse:
-    _settings: CloudEventSettings = CloudEventSettings()
-
     @abstractmethod
     def replace_default_source(self, new_source: str):
         pass  # pragma: no cover
-
-    @classmethod
-    def configured(cls, settings: CloudEventSettings) -> Type["_CloudEventResponse"]:
-        class ConfiguredCloudEventResponse(cls):
-            _settings = settings
-
-        return ConfiguredCloudEventResponse
 
 
 RawHeaders = List[Union[bytes, Any]]
@@ -53,13 +45,14 @@ class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
     Nothing to implement because structured CloudEvents are literally json objects
     """
 
+    _settings: CloudEventSettings = CloudEventSettings()
+
     # starlette response does not init it in __init__ directly, so we need to hint it
     raw_headers: RawHeaders
 
     # https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md#3-envelope
     media_type = "application/cloudevents+json"
 
-    @abstractmethod
     def replace_default_source(self, new_source: str):
         result = json.loads(self.body)
         if result.get("source") == DEFAULT_SOURCE:
@@ -72,6 +65,13 @@ class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
         self.raw_headers = _update_headers(
             self.raw_headers, {b"content-length": content_length.encode("latin-1")}
         )
+
+    @classmethod
+    def configured(cls, settings: CloudEventSettings) -> Type["_CloudEventResponse"]:
+        class ConfiguredStructuredCloudEventResponse(cls):
+            _settings = settings
+
+        return ConfiguredStructuredCloudEventResponse
 
 
 _CE_SOURCE_HEADER_NAME = b"ce-source"
@@ -95,6 +95,8 @@ def _empty_body_value(event: CloudEvent):
 
 
 class BinaryCloudEventResponse(Response, _CloudEventResponse):
+    _settings: CloudEventSettings = CloudEventSettings()
+
     def __init__(
         self,
         content: Dict[AnyStr, Any],
@@ -127,9 +129,15 @@ class BinaryCloudEventResponse(Response, _CloudEventResponse):
         headers = _update_headers(headers, ce_headers)
         return headers
 
-    @abstractmethod
     def replace_default_source(self, new_source: str):
         if (_CE_SOURCE_HEADER_NAME, DEFAULT_SOURCE_ENCODED) in self.raw_headers:
             self.raw_headers = _update_headers(
                 self.raw_headers, {_CE_SOURCE_HEADER_NAME: new_source.encode("utf-8")}
             )
+
+    @classmethod
+    def configured(cls, settings: CloudEventSettings) -> Type["_CloudEventResponse"]:
+        class ConfiguredBinaryCloudEventResponse(cls):
+            _settings = settings
+
+        return ConfiguredBinaryCloudEventResponse
