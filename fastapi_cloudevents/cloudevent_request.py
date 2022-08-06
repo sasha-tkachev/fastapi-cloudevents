@@ -5,8 +5,8 @@ from cloudevents.conversion import to_dict, to_json
 from cloudevents.http import CloudEvent, from_http
 from starlette.requests import Request
 
-from fastapi_cloudevents.settings import CloudEventSettings
 from fastapi_cloudevents.content_type import is_json_content_type_event
+from fastapi_cloudevents.settings import CloudEventSettings
 
 
 def _should_fix_json_data_payload(event: CloudEvent):
@@ -31,11 +31,11 @@ class CloudEventRequest(Request):
     async def body(self) -> bytes:
         if not hasattr(self, "_body"):
             body = await super().body()
-            event = from_http(dict(self.headers), body)
-            event = _best_effort_fix_json_data_payload(event)
-            body = to_json(event)
+            event = _best_effort_fix_json_data_payload(
+                from_http(dict(self.headers), body)
+            )
             self._json = to_dict(event)
-            self._body = body
+            self._body = to_json(event)
         return self._body
 
     @classmethod
