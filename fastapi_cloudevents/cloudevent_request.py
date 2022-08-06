@@ -11,11 +11,10 @@ _JSON_CONTENT_TYPE_PATTERN = re.compile(r"^.+?/.*\+?json$", flags=re.IGNORECASE)
 
 def _is_json_content_type(data_content_type: typing.Optional[str]) -> bool:
     if data_content_type is None:
-        # according the the CloudEvents spec, if no data content type is
-        # given we MAY assume it is json content type
+        # according to spec:  an event with no datacontenttype is exactly equivalent to
+        # one with datacontenttype="application/json".
         return True
-    return bool(_JSON_CONTENT_TYPE_PATTERN.match(
-            data_content_type))
+    return bool(_JSON_CONTENT_TYPE_PATTERN.match(data_content_type))
 
 
 def _should_fix_json_data_payload(event: CloudEvent):
