@@ -2,6 +2,7 @@ import json
 from typing import Any, Type
 
 from cloudevents.conversion import to_dict, to_json
+from cloudevents.exceptions import MissingRequiredFields
 from cloudevents.http import CloudEvent, from_http
 from starlette.requests import Request
 
@@ -29,15 +30,23 @@ class CloudEventRequest(Request):
     _settings: CloudEventSettings = CloudEventSettings()
     _json: Any
     _body: Any
-    
+
     async def body(self) -> bytes:
         if not hasattr(self, "_body"):
             body = await super().body()
-            event = _best_effort_fix_json_data_payload(
-                from_http(dict(self.headers), body)
-            )
-            self._json = to_dict(event)
-            self._body = to_json(event)
+            try:
+                event = _best_effort_fix_json_data_payload(
+                    from_http(dict(self.headers), body)
+                )
+                self._json = to_dict(event)
+                self._body = to_json(event)
+            except MissingRequiredFields:
+                if self._settings.allow_non_cloudevent_models:
+                    # This is not a CloudEvent, maybe some other model, will let FastAPI
+                    # decide down-stream
+                    self._body = body
+                else:
+                    raise
         return self._body
 
     @classmethod

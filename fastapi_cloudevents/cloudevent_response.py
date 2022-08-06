@@ -5,6 +5,7 @@ from typing import Any, AnyStr, Dict, List, Type, Union
 
 from cloudevents.abstract import CloudEvent
 from cloudevents.conversion import to_binary
+from cloudevents.exceptions import MissingRequiredFields
 from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse, Response
@@ -94,7 +95,7 @@ def _empty_body_value(event: CloudEvent):
         return b""
 
 
-class BinaryCloudEventResponse(Response, _CloudEventResponse):
+class BinaryCloudEventResponse(JSONResponse, _CloudEventResponse):
     _settings: CloudEventSettings = CloudEventSettings()
 
     def __init__(
@@ -117,16 +118,27 @@ class BinaryCloudEventResponse(Response, _CloudEventResponse):
         self.raw_headers = self._render_headers(content, headers=self.raw_headers)
 
     def render(self, content: Dict[AnyStr, Any]) -> bytes:
-        event = from_dict(content)
-        _, body = to_binary(event)
-        if body is None:
-            return _empty_body_value(event)
-        return body
+        try:
+            event = from_dict(content)
+            _, body = to_binary(event)
+            if body is None:
+                return _empty_body_value(event)
+            return body
+        except MissingRequiredFields:
+            if self._settings.allow_non_cloudevent_models:
+                return super(BinaryCloudEventResponse, self).render(content)
+            else:
+                raise
 
     @classmethod
     def _render_headers(cls, content: Dict[AnyStr, Any], headers: RawHeaders):
-        ce_headers, _ = to_binary(from_dict(content))
-        headers = _update_headers(headers, ce_headers)
+        try:
+            ce_headers, _ = to_binary(from_dict(content))
+            headers = _update_headers(headers, ce_headers)
+        except MissingRequiredFields:
+            if not cls._settings.allow_non_cloudevent_models:
+                raise
+
         return headers
 
     def replace_default_source(self, new_source: str):
