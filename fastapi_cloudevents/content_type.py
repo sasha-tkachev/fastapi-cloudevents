@@ -2,12 +2,14 @@ import re
 import typing
 
 # https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md#311-payload-serialization
+from cloudevents.abstract import AnyCloudEvent
+
 _JSON_CONTENT_TYPE_PATTERN = re.compile(
     r"^(.*/.*json|.*/.*\+json)$", flags=re.IGNORECASE
 )
 
 
-def is_json_content_type(data_content_type: typing.Optional[str]) -> bool:
+def _is_json_content_type(data_content_type: typing.Optional[str]) -> bool:
     """
     Assuming asking about the datacontenttype attribute value
     """
@@ -16,3 +18,7 @@ def is_json_content_type(data_content_type: typing.Optional[str]) -> bool:
         # one with datacontenttype="application/json".
         return True
     return bool(_JSON_CONTENT_TYPE_PATTERN.match(data_content_type))
+
+
+def is_json_content_type_event(event: AnyCloudEvent) -> bool:
+    return _is_json_content_type(event.get("datacontenttype"))

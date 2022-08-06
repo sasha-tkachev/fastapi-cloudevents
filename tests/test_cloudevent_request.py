@@ -5,7 +5,7 @@ from fastapi_cloudevents.cloudevent_request import (
     _best_effort_fix_json_data_payload,
     _should_fix_json_data_payload,
 )
-from fastapi_cloudevents.content_type import is_json_content_type
+from fastapi_cloudevents.content_type import _is_json_content_type
 
 
 

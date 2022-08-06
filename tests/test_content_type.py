@@ -1,6 +1,6 @@
 import pytest
 
-from fastapi_cloudevents.content_type import is_json_content_type
+from fastapi_cloudevents.content_type import _is_json_content_type
 
 
 @pytest.mark.parametrize(
@@ -24,4 +24,4 @@ from fastapi_cloudevents.content_type import is_json_content_type
     ],
 )
 def test_is_json_content_type_matches_golden_samples(given, expected):
-    assert is_json_content_type(given) == expected
+    assert _is_json_content_type(given) == expected

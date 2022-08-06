@@ -4,12 +4,12 @@ from cloudevents.conversion import to_dict, to_json
 from cloudevents.http import CloudEvent, from_http
 from starlette.requests import Request
 
-from fastapi_cloudevents.content_type import is_json_content_type
+from fastapi_cloudevents.content_type import is_json_content_type_event
 
 
 def _should_fix_json_data_payload(event: CloudEvent):
     if isinstance(event.data, (str, bytes)):
-        return is_json_content_type(event.get("datacontenttype"))
+        return is_json_content_type_event(event)
     else:
         return False  # not encoded json payload
 
