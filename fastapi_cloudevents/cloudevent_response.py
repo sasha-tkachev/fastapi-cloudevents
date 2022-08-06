@@ -1,7 +1,7 @@
 import json
 import typing
 from abc import abstractmethod
-from typing import Any, AnyStr, Dict, List, Union
+from typing import Any, AnyStr, Dict, List, Union, Type
 
 from cloudevents.abstract import CloudEvent
 from cloudevents.conversion import to_binary
@@ -9,15 +9,24 @@ from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse, Response
 
-from fastapi_cloudevents.cloudevent import (DEFAULT_SOURCE,
-                                            DEFAULT_SOURCE_ENCODED)
+from fastapi_cloudevents import CloudEventSettings
+from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
 from fastapi_cloudevents.content_type import is_json_content_type_event
 
 
 class _CloudEventResponse:
+    _settings: CloudEventSettings = CloudEventSettings()
+
     @abstractmethod
     def replace_default_source(self, new_source: str):
         pass  # pragma: no cover
+
+    @classmethod
+    def configured(cls, settings: CloudEventSettings) -> Type["_CloudEventResponse"]:
+        class ConfiguredCloudEventResponse(cls):
+            _settings = settings
+
+        return ConfiguredCloudEventResponse
 
 
 RawHeaders = List[Union[bytes, Any]]
