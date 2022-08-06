@@ -31,14 +31,13 @@ app.router.route_class = CloudEventRoute
 @app.post("/")
 async def on_event(event: CloudEvent) -> CloudEvent:
     return CloudEvent(
-        type="my.response-type.v1", source="my:source", data=event.data,
+        type="my.response-type.v1", data=event.data,
         datacontenttype=event.datacontenttype
     )
 
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
 ```
 
 The rout accepts both binary CloudEvents
@@ -65,7 +64,7 @@ content-length: 13
 content-type: application/json
 ce-specversion: 1.0
 ce-id: 25cd28f0-0605-4a76-b1d8-cffbe3375413
-ce-source: my:source
+ce-source: http://localhost:8000/
 ce-type: my.response-type.v1
 ce-time: 2022-08-05T23:50:52.809697+00:00
 
@@ -106,14 +105,12 @@ async def on_event(event: OurEvent) -> CloudEvent:
     if isinstance(event, MyEvent):
         return CloudEvent(
             type="my.response-type.v1",
-            source=_source,
             data=f"got {event.data} from my event!",
             datacontenttype="text/plain",
         )
     else:
         return CloudEvent(
             type="your.response-type.v1",
-            source=_source,
             data=f"got {event.data} from your event!",
             datacontenttype="text/plain",
         )
@@ -142,7 +139,8 @@ app.router.route_class = CloudEventRoute
 @app.post("/", response_class=StructuredCloudEventResponse)
 async def on_event(event: CloudEvent) -> CloudEvent:
     return CloudEvent(
-        type="com.my-corp.response.v1", source="my:source", data=event.data,
+        type="com.my-corp.response.v1",
+        data=event.data,
         datacontenttype=event.datacontenttype
     )
 
@@ -164,5 +162,5 @@ server: uvicorn
 content-length: 247
 content-type: application/json
 
-{"data":"Hello World!","source":"my:source","id":"3412321f-85b3-4f7f-a551-f4c23a05de3a","type":"com.my-corp.response.v1","specversion":"1.0","time":"2022-08-05T23:51:26.878723+00:00","datacontenttype":"text/plain"}
+{"data":"Hello World!","source":"http://localhost:8001/","id":"3412321f-85b3-4f7f-a551-f4c23a05de3a","type":"com.my-corp.response.v1","specversion":"1.0","time":"2022-08-05T23:51:26.878723+00:00","datacontenttype":"text/plain"}
 ```

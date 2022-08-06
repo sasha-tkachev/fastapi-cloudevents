@@ -5,7 +5,7 @@ content-length: 13
 content-type: application/json
 ce-specversion: 1.0
 ce-id: 25cd28f0-0605-4a76-b1d8-cffbe3375413
-ce-source: my:source
+ce-source: http://localhost:8000/
 ce-type: my.response-type.v1
 ce-time: 2022-08-05T23:50:52.809697+00:00
 

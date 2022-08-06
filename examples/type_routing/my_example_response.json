@@ -1,6 +1,6 @@
 {
     "data": "got b'Hello World!' from my event!",
-    "source": "dummy:source",
+    "source": "http://localhost:8002/",
     "id": "54eedfab-47f2-4778-be97-ec27bbf4edff",
     "type": "my.response-type.v1",
     "specversion": "1.0",

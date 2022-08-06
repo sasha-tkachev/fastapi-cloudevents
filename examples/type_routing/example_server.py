@@ -30,14 +30,12 @@ async def on_event(event: OurEvent) -> CloudEvent:
     if isinstance(event, MyEvent):
         return CloudEvent(
             type="my.response-type.v1",
-            source=_source,
             data=f"got {event.data} from my event!",
             datacontenttype="text/plain",
         )
     else:
         return CloudEvent(
             type="your.response-type.v1",
-            source=_source,
             data=f"got {event.data} from your event!",
             datacontenttype="text/plain",
         )
