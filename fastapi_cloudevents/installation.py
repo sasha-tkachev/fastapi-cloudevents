@@ -1,4 +1,5 @@
 import logging
+from logging import getLogger
 from typing import Optional, Type
 
 from fastapi import FastAPI
@@ -9,6 +10,8 @@ from fastapi_cloudevents import (BinaryCloudEventResponse,
 from fastapi_cloudevents.cloudevent_response import _CloudEventResponse
 from fastapi_cloudevents.cloudevent_route import CloudEventRoute
 from fastapi_cloudevents.settings import CloudEventSettings, ResponseMode
+
+logger = getLogger(__name__)
 
 
 def _choose_default_response_class(
@@ -27,13 +30,9 @@ def install_fastapi_cloudevents(
 ) -> FastAPI:
     if settings is None:
         settings = CloudEventSettings()
-    if app.default_response_class == JSONResponse:
-        app.default_response_class = _choose_default_response_class(settings)
-    else:
-        logging.warning(
-            "app default response class was not json response, "
-            "cannot override to binary CloudEvent response, this may "
-            "cause issues"
-        )
+    if app.default_response_class != JSONResponse:
+        logger.warning("overriding custom non json response default response class")
+    app.default_response_class = _choose_default_response_class(settings)
+
     app.router.route_class = CloudEventRoute.configured(settings)
     return app
