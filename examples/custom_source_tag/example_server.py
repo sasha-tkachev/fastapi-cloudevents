@@ -10,7 +10,7 @@ app = FastAPI(default_response_class=BinaryCloudEventResponse)
 app.router.route_class = CloudEventRoute
 
 
-@app.get(
+@app.post(
     "/",
     tags=[
         # this tag will cause all events produced by this route to have a "my-source"
