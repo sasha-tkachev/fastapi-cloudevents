@@ -22,17 +22,18 @@ and install the [development branch of the pydantic feature](https://github.com/
 import uvicorn
 from fastapi import FastAPI
 
-from fastapi_cloudevents import CloudEvent, CloudEventRoute, BinaryCloudEventResponse
+from fastapi_cloudevents import CloudEvent, install_fastapi_cloudevents
 
-app = FastAPI(default_response_class=BinaryCloudEventResponse)
-app.router.route_class = CloudEventRoute
+app = FastAPI()
+app = install_fastapi_cloudevents(app)
 
 
 @app.post("/")
 async def on_event(event: CloudEvent) -> CloudEvent:
     return CloudEvent(
-        type="my.response-type.v1", data=event.data,
-        datacontenttype=event.datacontenttype
+        type="my.response-type.v1",
+        data=event.data,
+        datacontenttype=event.datacontenttype,
     )
 
 
@@ -80,11 +81,13 @@ from fastapi import FastAPI
 from pydantic import Field
 from typing_extensions import Annotated
 
-from fastapi_cloudevents import (CloudEvent, CloudEventRoute,
-                                 StructuredCloudEventResponse)
+from fastapi_cloudevents import (CloudEvent, StructuredCloudEventResponse,
+                                 install_fastapi_cloudevents)
 
-app = FastAPI(default_response_class=StructuredCloudEventResponse)
-app.router.route_class = CloudEventRoute
+app = FastAPI()
+app = install_fastapi_cloudevents(
+    app, default_response_class=StructuredCloudEventResponse
+)
 
 
 class MyEvent(CloudEvent):
@@ -118,7 +121,6 @@ async def on_event(event: OurEvent) -> CloudEvent:
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8002)
-
 ```
 
 ### [Structured Response Example](examples/structured_response_server)
@@ -129,11 +131,11 @@ To send the response in the http CloudEvent structured format, you MAY use the
 import uvicorn
 from fastapi import FastAPI
 
-from fastapi_cloudevents import (StructuredCloudEventResponse, CloudEvent,
-                                 CloudEventRoute)
+from fastapi_cloudevents import (CloudEvent, StructuredCloudEventResponse,
+                                 install_fastapi_cloudevents)
 
 app = FastAPI()
-app.router.route_class = CloudEventRoute
+app = install_fastapi_cloudevents(app)
 
 
 @app.post("/", response_class=StructuredCloudEventResponse)
@@ -141,11 +143,13 @@ async def on_event(event: CloudEvent) -> CloudEvent:
     return CloudEvent(
         type="com.my-corp.response.v1",
         data=event.data,
-        datacontenttype=event.datacontenttype
+        datacontenttype=event.datacontenttype,
     )
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8001)
+
 ``` 
 ```shell script
 curl http://localhost:8001 -i -X POST -d "Hello World!" \

@@ -5,11 +5,13 @@ from fastapi import FastAPI
 from pydantic import Field
 from typing_extensions import Annotated
 
-from fastapi_cloudevents import (CloudEvent, CloudEventRoute,
-                                 StructuredCloudEventResponse)
+from fastapi_cloudevents import (CloudEvent, StructuredCloudEventResponse,
+                                 install_fastapi_cloudevents)
 
-app = FastAPI(default_response_class=StructuredCloudEventResponse)
-app.router.route_class = CloudEventRoute
+app = FastAPI()
+app = install_fastapi_cloudevents(
+    app, default_response_class=StructuredCloudEventResponse
+)
 
 
 class MyEvent(CloudEvent):

@@ -3,11 +3,10 @@ import random
 import uvicorn
 from fastapi import FastAPI
 
-from fastapi_cloudevents import (BinaryCloudEventResponse, CloudEvent,
-                                 CloudEventRoute)
+from fastapi_cloudevents import CloudEvent, install_fastapi_cloudevents
 
-app = FastAPI(default_response_class=BinaryCloudEventResponse)
-app.router.route_class = CloudEventRoute
+app = FastAPI()
+app = install_fastapi_cloudevents(app)
 
 
 @app.get(

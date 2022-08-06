@@ -1,17 +1,18 @@
 import uvicorn
 from fastapi import FastAPI
 
-from fastapi_cloudevents import CloudEvent, CloudEventRoute, BinaryCloudEventResponse
+from fastapi_cloudevents import CloudEvent, install_fastapi_cloudevents
 
-app = FastAPI(default_response_class=BinaryCloudEventResponse)
-app.router.route_class = CloudEventRoute
+app = FastAPI()
+app = install_fastapi_cloudevents(app)
 
 
 @app.post("/")
 async def on_event(event: CloudEvent) -> CloudEvent:
     return CloudEvent(
-        type="my.response-type.v1", data=event.data,
-        datacontenttype=event.datacontenttype
+        type="my.response-type.v1",
+        data=event.data,
+        datacontenttype=event.datacontenttype,
     )
 
 

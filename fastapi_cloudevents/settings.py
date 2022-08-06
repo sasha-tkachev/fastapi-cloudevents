@@ -1,5 +1,5 @@
 from pydantic import BaseSettings
 
 
-class CloudEventRouteSettings(BaseSettings):
+class CloudEventSettings(BaseSettings):
     pass
