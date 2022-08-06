@@ -3,12 +3,13 @@ from typing import AnyStr, Dict
 
 import pytest
 
-from fastapi_cloudevents import (BinaryCloudEventResponse,
-                                 StructuredCloudEventResponse)
+from fastapi_cloudevents import BinaryCloudEventResponse, StructuredCloudEventResponse
 from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE
-from fastapi_cloudevents.cloudevent_response import (RawHeaders,
-                                                     _encoded_string,
-                                                     _update_headers)
+from fastapi_cloudevents.cloudevent_response import (
+    RawHeaders,
+    _encoded_string,
+    _update_headers,
+)
 
 
 def test_bytes_is_already_encoded():
@@ -162,3 +163,28 @@ def test_binary_replace_default_source_matches_golden_sample(
 ):
     given.replace_default_source("new-source")
     assert set(given.raw_headers) == set(expected_headers)
+
+
+@pytest.mark.parametrize(
+    "content_type, expected_value",
+    [
+        (None, b"null"),
+        ("plain/text", b""),
+        ("application/json", b"null"),
+        ("dummy/dummy+json", b"null"),
+    ],
+)
+def test_binary_response_given_empty_data_return_golden_empty_value(
+    content_type, expected_value
+):
+    assert (
+        BinaryCloudEventResponse(
+            {
+                "source": "dummy",
+                "type": "dummy",
+                "data": None,
+                "datacontenttype": content_type,
+            }
+        ).body
+        == expected_value
+    )
