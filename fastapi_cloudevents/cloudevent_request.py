@@ -1,17 +1,26 @@
 import json
 import re
+import typing
 
 from cloudevents.conversion import to_dict, to_json
 from cloudevents.http import CloudEvent, from_http
 from starlette.requests import Request
 
-_JSON_CONTENT_TYPE = re.compile(r"^.+?/.*\+?json$", flags=re.IGNORECASE)
+_JSON_CONTENT_TYPE_PATTERN = re.compile(r"^.+?/.*\+?json$", flags=re.IGNORECASE)
+
+
+def _is_json_content_type(data_content_type: typing.Optional[str]) -> bool:
+    if data_content_type is None:
+        # according the the CloudEvents spec, if no data content type is
+        # given we MAY assume it is json content type
+        return True
+    return bool(_JSON_CONTENT_TYPE_PATTERN.match(
+            data_content_type))
 
 
 def _should_fix_json_data_payload(event: CloudEvent):
     if isinstance(event.data, (str, bytes)):
-        data_content_type = event.get("datacontenttype")
-        return data_content_type is None or _JSON_CONTENT_TYPE.match(data_content_type)
+        return _is_json_content_type(event.get("datacontenttype"))
     else:
         return False  # not encoded json payload
 
