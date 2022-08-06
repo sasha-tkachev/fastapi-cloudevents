@@ -6,7 +6,10 @@ from cloudevents.conversion import to_dict, to_json
 from cloudevents.http import CloudEvent, from_http
 from starlette.requests import Request
 
-_JSON_CONTENT_TYPE_PATTERN = re.compile(r"^.+?/.*\+?json$", flags=re.IGNORECASE)
+# https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md#311-payload-serialization
+_JSON_CONTENT_TYPE_PATTERN = re.compile(
+    r"^(.*/.*json|.*/.*\+json)$", flags=re.IGNORECASE
+)
 
 
 def _is_json_content_type(data_content_type: typing.Optional[str]) -> bool:
