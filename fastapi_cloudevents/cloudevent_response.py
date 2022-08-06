@@ -18,12 +18,16 @@ class _CloudEventResponse(JSONResponse):
         pass
 
 
+RawHeaders = List[Union[bytes, Any]]
+
+
 class StructuredCloudEventResponse(_CloudEventResponse):
     """
     Nothing to implement because structured CloudEvents are literally json objects
     """
+
     # starlette response does not init it in __init__ directly, so we need to hint it
-    raw_headers: List[Union[bytes, Any]]
+    raw_headers: RawHeaders
 
     # https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md#3-envelope
     media_type = "application/cloudevents+json"
@@ -64,7 +68,7 @@ class BinaryCloudEventResponse(_CloudEventResponse):
         return body
 
     @classmethod
-    def _render_headers(cls, content: typing.Optional[typing.Any], headers):
+    def _render_headers(cls, content: typing.Optional[typing.Any], headers: RawHeaders):
         if content is None:
             return headers
         ce_headers, _ = to_binary(from_dict(content))
