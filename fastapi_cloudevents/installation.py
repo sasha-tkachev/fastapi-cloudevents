@@ -12,13 +12,13 @@ from fastapi_cloudevents.settings import CloudEventSettings, ResponseMode
 
 
 def _choose_default_response_class(
-    response_mode: ResponseMode,
+    settings: CloudEventSettings,
 ) -> Type[_CloudEventResponse]:
-    if response_mode == ResponseMode.binary:
-        return BinaryCloudEventResponse
-    if response_mode == ResponseMode.structured:
-        return StructuredCloudEventResponse
-    raise ValueError("Unknown response mode {}".format(response_mode))
+    if settings.default_response_mode == ResponseMode.binary:
+        return BinaryCloudEventResponse.configured(settings)
+    if settings.default_response_mode == ResponseMode.structured:
+        return StructuredCloudEventResponse.configured(settings)
+    raise ValueError("Unknown response mode {}".format(settings.default_response_mode))
 
 
 def install_fastapi_cloudevents(
@@ -28,9 +28,7 @@ def install_fastapi_cloudevents(
     if settings is None:
         settings = CloudEventSettings()
     if app.default_response_class == JSONResponse:
-        app.default_response_class = _choose_default_response_class(
-            settings.default_response_mode
-        )
+        app.default_response_class = _choose_default_response_class(settings)
     else:
         logging.warning(
             "app default response class was not json response, "
