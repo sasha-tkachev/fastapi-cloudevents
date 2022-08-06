@@ -1,6 +1,7 @@
 import cloudevents.pydantic
 
 DEFAULT_SOURCE = "fastapi"
+DEFAULT_SOURCE_ENCODED = DEFAULT_SOURCE.encode("utf-8")
 
 
 class CloudEvent(cloudevents.pydantic.CloudEvent):
