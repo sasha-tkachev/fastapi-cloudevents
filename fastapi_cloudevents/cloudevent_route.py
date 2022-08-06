@@ -15,7 +15,7 @@ def _route_source(request: Request, settings: CloudEventSettings):
     return str(request.url)
 
 
-class _CloudEventRoute(APIRoute):
+class CloudEventRoute(APIRoute):
     _settings: CloudEventSettings = CloudEventSettings()
 
     def get_route_handler(self) -> Callable:
@@ -33,12 +33,9 @@ class _CloudEventRoute(APIRoute):
 
         return custom_route_handler
 
+    @classmethod
+    def configured(cls, settings: CloudEventSettings):
+        class ConfiguredCloudEventRoute(CloudEventRoute):
+            _settings: CloudEventSettings = settings
 
-def cloudevent_route_class(settings: Optional[CloudEventSettings] = None):
-    if settings is None:
-        settings = CloudEventSettings()
-
-    class ConfiguredCloudEventRoute(_CloudEventRoute):
-        _settings: CloudEventSettings = settings
-
-    return ConfiguredCloudEventRoute
+        return ConfiguredCloudEventRoute

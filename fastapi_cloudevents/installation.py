@@ -4,9 +4,9 @@ from typing import Optional, Type
 from fastapi import FastAPI
 from starlette.responses import JSONResponse
 
-from fastapi_cloudevents import (BinaryCloudEventResponse,
-                                 cloudevent_route_class)
+from fastapi_cloudevents import BinaryCloudEventResponse
 from fastapi_cloudevents.cloudevent_response import _CloudEventResponse
+from fastapi_cloudevents.cloudevent_route import CloudEventRoute
 from fastapi_cloudevents.settings import CloudEventSettings
 
 
@@ -28,5 +28,6 @@ def install_fastapi_cloudevents(
             )
             default_response_class = app.default_response_class
     app.default_response_class = default_response_class
-    app.router.route_class = cloudevent_route_class(settings)
+    app.router.route_class = CloudEventRoute.configured(settings)
     return app
+
