@@ -40,7 +40,7 @@ class CloudEventRequest(Request):
 
     @classmethod
     def configured(cls, settings: CloudEventSettings) -> Type["CloudEventRequest"]:
-        class ConfiguredCloudEventRequest(CloudEventRequest):
+        class ConfiguredCloudEventRequest(cls):
             _settings = settings
 
         return ConfiguredCloudEventRequest
