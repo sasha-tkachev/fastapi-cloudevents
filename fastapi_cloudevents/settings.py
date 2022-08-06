@@ -13,3 +13,4 @@ class ResponseMode(Enum):
 class CloudEventSettings(BaseSettings):
     default_source: Optional[constr(min_length=1)]
     default_response_mode: ResponseMode = ResponseMode.binary
+    create_events_on_behalf_of_the_client: bool = False
