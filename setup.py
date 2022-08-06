@@ -11,7 +11,7 @@ def _read_requirements(filename):
 
 
 setuptools.setup(
-    name="fastapi_cloudevents",
+    name="fastapi-cloudevents",
     version="0.1.0",
     author="Alexander Tkachev",
     author_email="sasha64sasha@gmail.com",
