@@ -27,10 +27,9 @@ class CloudEventRequest(Request):
     async def body(self) -> bytes:
         if not hasattr(self, "_body"):
             body = await super().body()
-            if "ce-specversion" in self.headers:
-                event = from_http(dict(self.headers), body)
-                event = _best_effort_fix_json_data_payload(event)
-                body = to_json(event)
-                self._json = to_dict(event)
+            event = from_http(dict(self.headers), body)
+            event = _best_effort_fix_json_data_payload(event)
+            body = to_json(event)
+            self._json = to_dict(event)
             self._body = body
         return self._body
