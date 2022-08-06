@@ -116,6 +116,7 @@ def test_structured_replace_default_source_matches_golden_sample(
                 (b"ce-time", b"1"),
                 (b"ce-type", b"dummy"),
                 (b"content-type", b"application/json"),
+                (b'content-length', b'4'),
             ],
             id="non default source must not be replaced",
         ),
@@ -130,6 +131,7 @@ def test_structured_replace_default_source_matches_golden_sample(
                 (b"ce-time", b"1"),
                 (b"ce-type", b"dummy"),
                 (b"content-type", b"application/json"),
+                (b'content-length', b'4'),
             ],
             id="default source should be replaced",
         ),
@@ -149,6 +151,7 @@ def test_structured_replace_default_source_matches_golden_sample(
                 (b"ce-time", b"1"),
                 (b"ce-type", b"dummy"),
                 (b"content-type", b"application/json"),
+                (b'content-length', b'4'),
             ],
             id=(
                 "sources which contain the default source as a sub string must not be "
