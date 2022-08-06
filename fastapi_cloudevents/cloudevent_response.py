@@ -32,7 +32,7 @@ def _update_headers(
 ) -> RawHeaders:
     headers = dict(headers)
     headers.update(
-        {_encoded_string(k): _encoded_string(v) for k, v in new_headers.items()}
+        {_encoded_string(k).lower(): _encoded_string(v) for k, v in new_headers.items()}
     )
     return list(headers.items())
 
