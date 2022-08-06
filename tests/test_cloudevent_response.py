@@ -2,11 +2,10 @@ from typing import AnyStr, Dict
 
 import pytest
 
-from fastapi_cloudevents.cloudevent_response import (
-    RawHeaders,
-    _encoded_string,
-    _update_headers,
-)
+from fastapi_cloudevents import StructuredCloudEventResponse
+from fastapi_cloudevents.cloudevent_response import (RawHeaders,
+                                                     _encoded_string,
+                                                     _update_headers)
 
 
 def test_bytes_is_already_encoded():
@@ -39,3 +38,10 @@ def test_update_headers_match_golden_sample(
     result = _update_headers(given_headers, new_headers)
     for value in expected:  # we cannot test order
         assert value in result
+
+
+def test_re_rendering_structured_response_should_update_content_length():
+    response = StructuredCloudEventResponse({"a": "b"})
+    old_content_length = dict(response.raw_headers)[b"content-length"]
+    response._re_render({"a": "b", "c": "d"})
+    assert dict(response.raw_headers)[b"content-length"] != old_content_length
