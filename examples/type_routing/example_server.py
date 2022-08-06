@@ -5,12 +5,12 @@ from fastapi import FastAPI
 from pydantic import Field
 from typing_extensions import Annotated
 
-from fastapi_cloudevents import (CloudEvent, CloudEventSettings, ResponseMode,
+from fastapi_cloudevents import (CloudEvent, CloudEventSettings, ContentMode,
                                  install_fastapi_cloudevents)
 
 app = FastAPI()
 app = install_fastapi_cloudevents(
-    app, settings=CloudEventSettings(default_response_mode=ResponseMode.structured)
+    app, settings=CloudEventSettings(default_response_mode=ContentMode.structured)
 )
 
 

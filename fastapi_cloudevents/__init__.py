@@ -5,4 +5,4 @@ from fastapi_cloudevents.cloudevent_response import (
     StructuredCloudEventResponse,
 )
 from fastapi_cloudevents.installation import install_fastapi_cloudevents
-from fastapi_cloudevents.settings import CloudEventSettings, ResponseMode
+from fastapi_cloudevents.settings import CloudEventSettings, ContentMode
