@@ -16,8 +16,6 @@ setuptools.setup(
     author="Alexander Tkachev",
     author_email="sasha64sasha@gmail.com",
     description="FastAPI CloudEvents Middleware",
-    long_description=Path("README.md").read_text(),
-    long_description_content_type="text/markdown",
     url="https://github.com/sasha-tkachev/fastapi-cloudevents",
     keywords=[
         "fastapi",
