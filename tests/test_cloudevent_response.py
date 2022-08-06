@@ -3,7 +3,8 @@ from typing import AnyStr, Dict
 
 import pytest
 
-from fastapi_cloudevents import StructuredCloudEventResponse
+from fastapi_cloudevents import (BinaryCloudEventResponse,
+                                 StructuredCloudEventResponse)
 from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE
 from fastapi_cloudevents.cloudevent_response import (RawHeaders,
                                                      _encoded_string,
@@ -92,4 +93,72 @@ def test_structured_replace_default_source_matches_golden_sample(
 ):
     given.replace_default_source("new-source")
     assert json.loads(given.body) == expected_body
+    assert set(given.raw_headers) == set(expected_headers)
+
+
+@pytest.mark.parametrize(
+    "given, expected_headers",
+    [
+        pytest.param(
+            BinaryCloudEventResponse(
+                {
+                    "source": "non-default-source",
+                    "type": "dummy",
+                    "id": "1",
+                    "time": "1",
+                }
+            ),
+            [
+                (b"ce-id", b"1"),
+                (b"ce-source", b"non-default-source"),
+                (b"ce-specversion", b"1.0"),
+                (b"ce-time", b"1"),
+                (b"ce-type", b"dummy"),
+                (b"content-type", b"application/json"),
+            ],
+            id="non default source must not be replaced",
+        ),
+        pytest.param(
+            BinaryCloudEventResponse(
+                {"source": DEFAULT_SOURCE, "type": "dummy", "id": "1", "time": "1"}
+            ),
+            [
+                (b"ce-id", b"1"),
+                (b"ce-source", b"new-source"),
+                (b"ce-specversion", b"1.0"),
+                (b"ce-time", b"1"),
+                (b"ce-type", b"dummy"),
+                (b"content-type", b"application/json"),
+            ],
+            id="default source should be replaced",
+        ),
+        pytest.param(
+            BinaryCloudEventResponse(
+                {
+                    "source": "dummy" + DEFAULT_SOURCE + "another",
+                    "type": "dummy",
+                    "id": "1",
+                    "time": "1",
+                }
+            ),
+            [
+                (b"ce-id", b"1"),
+                (b"ce-source", b"dummyfastapianother"),
+                (b"ce-specversion", b"1.0"),
+                (b"ce-time", b"1"),
+                (b"ce-type", b"dummy"),
+                (b"content-type", b"application/json"),
+            ],
+            id=(
+                "sources which contain the default source as a sub string must not be "
+                "affected"
+            ),
+        ),
+    ],
+)
+def test_binary_replace_default_source_matches_golden_sample(
+    given: BinaryCloudEventResponse,
+    expected_headers: RawHeaders,
+):
+    given.replace_default_source("new-source")
     assert set(given.raw_headers) == set(expected_headers)
