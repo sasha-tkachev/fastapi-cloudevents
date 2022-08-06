@@ -1,16 +1,15 @@
 import json
 import typing
 from abc import abstractmethod
-from typing import Any, List, Union
-
-from starlette.responses import JSONResponse, Response
+from typing import Any, AnyStr, Dict, List, Optional, Union
 
 from cloudevents.abstract import AnyCloudEvent
 from cloudevents.conversion import to_binary
 from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
+from starlette.responses import JSONResponse, Response
 
-from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE
+from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
 
 
 class _CloudEventResponse:
@@ -20,6 +19,22 @@ class _CloudEventResponse:
 
 
 RawHeaders = List[Union[bytes, Any]]
+
+
+def _encoded_string(s: AnyStr) -> bytes:
+    if isinstance(s, bytes):
+        return s
+    return s.encode("utf-8")
+
+
+def _update_headers(
+    headers: RawHeaders, new_headers: Dict[AnyStr, AnyStr]
+) -> RawHeaders:
+    headers = dict(headers)
+    headers.update(
+        {_encoded_string(k): _encoded_string(v) for k, v in new_headers.items()}
+    )
+    return list(headers.items())
 
 
 class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
@@ -36,12 +51,19 @@ class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
     @abstractmethod
     def replace_default_source(self, new_source: str):
         result = json.loads(self.body)
-        result["source"] = result["source"].replace(DEFAULT_SOURCE, new_source)
-        self.body = self.render(result)
+        if result.get("source") == DEFAULT_SOURCE:
+            result["source"] = new_source
+        self._re_render(result)
+
+    def _re_render(self, content: typing.Any) -> None:
+        self.body = self.render(content)
         content_length = str(len(self.body))
-        headers = dict(self.raw_headers)
-        headers[b"content-length"] = content_length.encode("latin-1")
-        self.raw_headers = list(headers.items())
+        self.raw_headers = _update_headers(
+            self.raw_headers, {b"content-length": content_length.encode("latin-1")}
+        )
+
+
+_CE_SOURCE_HEADER_NAME = b"ce-source"
 
 
 class BinaryCloudEventResponse(Response, _CloudEventResponse):
@@ -73,17 +95,12 @@ class BinaryCloudEventResponse(Response, _CloudEventResponse):
         if content is None:
             return headers
         ce_headers, _ = to_binary(from_dict(content))
-        ce_headers = [
-            (k.encode("utf-8"), v.encode("utf-8")) for k, v in ce_headers.items()
-        ]
-        result = dict(headers)
-        result.update(ce_headers)
-        return list(result.items())
+        headers = _update_headers(headers, ce_headers)
+        return headers
 
     @abstractmethod
     def replace_default_source(self, new_source: str):
-        result = dict(self.raw_headers)
-        source = result.get(b"ce-source", b"").decode("utf-8")
-        source = source.replace(DEFAULT_SOURCE, new_source)
-        result[b"ce-source"] = source.encode("utf-8")
-        self.raw_headers = list(result.items())
+        if (_CE_SOURCE_HEADER_NAME, DEFAULT_SOURCE_ENCODED) in self.raw_headers:
+            self.raw_headers = _update_headers(
+                self.raw_headers, {_CE_SOURCE_HEADER_NAME: new_source.encode("utf-8")}
+            )
