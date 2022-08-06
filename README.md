@@ -1,6 +1,18 @@
 # fastapi-cloudevents
-[FastAPI](https://fastapi.tiangolo.com/) [Middleware](https://fastapi.tiangolo.com/tutorial/middleware/) for [CloudEvents](https://cloudevents.io/) Integration
+[FastAPI](https://fastapi.tiangolo.com/) plugin for [CloudEvents](https://cloudevents.io/) Integration
 
+Allows to easily consume and produce CloudEvents over REST API. 
+
+Automatically parses CloudEvents both in the binary and structured format and
+provides an interface very similar to the regular FastAPI interface. No more
+hustling with `to_structured` and `from_http` function calls!
+
+ ```python
+@app.post("/")
+async def on_event(event: CloudEvent) -> CloudEvent:
+    pass
+```
+See more examples below
 
 ### Install
 This package currently cannot be installed directly from pypi. 
