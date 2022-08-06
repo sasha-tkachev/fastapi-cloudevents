@@ -171,3 +171,4 @@ content-type: application/json
 
 ## More Examples
 * [Custom Default Source](examples/custom_default_source)
+* [Mixed Usage of events an regular models](examples/events_and_basemodels_mixed)
