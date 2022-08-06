@@ -3,16 +3,15 @@ import typing
 from abc import abstractmethod
 from typing import Any, AnyStr, Dict, List, Union
 
+from cloudevents.abstract import CloudEvent
 from cloudevents.conversion import to_binary
 from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse, Response
 
-from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
-from fastapi_cloudevents.content_type import (
-    _is_json_content_type,
-    is_json_content_type_event,
-)
+from fastapi_cloudevents.cloudevent import (DEFAULT_SOURCE,
+                                            DEFAULT_SOURCE_ENCODED)
+from fastapi_cloudevents.content_type import is_json_content_type_event
 
 
 class _CloudEventResponse:
@@ -69,6 +68,23 @@ class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
 _CE_SOURCE_HEADER_NAME = b"ce-source"
 
 
+def _empty_body_value(event: CloudEvent):
+    """
+    We MUST return a non-None http payload to the client, but the to_binary
+    function returned None.
+    The sensible thing to do is to return b"" an empty buffer.
+    The problem is that if the datacontenttype of the event
+    is `application/json` (which it is by default for CloudEvents) b"" is an invalid
+    json buffer, and trying to parse it on the client will result in an error. So to
+    handle this case We return b"null" so when the client
+    parses the body he will get a `None`
+    """
+    if is_json_content_type_event(event):
+        return b"null"  # empty buffer is not a valid json value
+    else:
+        return b""
+
+
 class BinaryCloudEventResponse(Response, _CloudEventResponse):
     def __init__(
         self,
@@ -95,10 +111,7 @@ class BinaryCloudEventResponse(Response, _CloudEventResponse):
         event = from_dict(content)
         _, body = to_binary(event)
         if body is None:
-            if is_json_content_type_event(event):
-                return b"null"  # empty buffer is not a valid json value
-            else:
-                return b""
+            return _empty_body_value(event)
         return body
 
     @classmethod
