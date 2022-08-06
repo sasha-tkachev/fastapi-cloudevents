@@ -10,7 +10,7 @@ from fastapi_cloudevents import (CloudEvent, CloudEventSettings, ResponseMode,
 
 app = FastAPI()
 app = install_fastapi_cloudevents(
-    app, settings=CloudEventSettings(default_response_mode=ResponseMode.structured)
+    app, settings=CloudEventSettings(response_mode=ResponseMode.structured)
 )
 
 

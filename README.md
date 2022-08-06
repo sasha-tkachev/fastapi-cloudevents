@@ -86,7 +86,7 @@ from fastapi_cloudevents import (CloudEvent, CloudEventSettings, ResponseMode,
 
 app = FastAPI()
 app = install_fastapi_cloudevents(
-    app, settings=CloudEventSettings(default_response_mode=ResponseMode.structured)
+    app, settings=CloudEventSettings(response_mode=ResponseMode.structured)
 )
 
 
@@ -121,6 +121,7 @@ async def on_event(event: OurEvent) -> CloudEvent:
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8002)
+
 ```
 
 ### [Structured Response Example](examples/structured_response_server)
