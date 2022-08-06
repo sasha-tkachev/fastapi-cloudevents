@@ -1,3 +1,4 @@
+import re
 from typing import Callable
 
 from fastapi.routing import APIRoute
@@ -6,7 +7,7 @@ from starlette.responses import Response
 
 from fastapi_cloudevents.cloudevent_request import CloudEventRequest
 from fastapi_cloudevents.cloudevent_response import _CloudEventResponse
-import re
+from fastapi_cloudevents.settings import CloudEventRouteSettings
 
 _CE_SOURCE_TAG_PREFIX = re.compile(r"^ce-source:", flags=re.IGNORECASE)
 
@@ -27,6 +28,8 @@ def _route_source(route: APIRoute, request: Request) -> str:
 
 
 class CloudEventRoute(APIRoute):
+    _settings: CloudEventRouteSettings = CloudEventRouteSettings()
+
     def get_route_handler(self) -> Callable:
         original_route_handler = super().get_route_handler()
 
@@ -39,3 +42,10 @@ class CloudEventRoute(APIRoute):
             return response
 
         return custom_route_handler
+
+    @classmethod
+    def configured(cls, settings: CloudEventRouteSettings):
+        class ConfiguredCloudEventRoute(CloudEventRoute):
+            _settings: CloudEventRouteSettings = settings
+
+        return ConfiguredCloudEventRoute
