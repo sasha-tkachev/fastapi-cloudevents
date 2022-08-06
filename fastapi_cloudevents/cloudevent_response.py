@@ -22,7 +22,7 @@ class StructuredCloudEventResponse(_CloudEventResponse):
     """
     Nothing to implement because structured CloudEvents are literally json objects
     """
-
+    # starlette response does not init it in __init__ directly, so we need to hint it
     raw_headers: List[Union[bytes, Any]]
 
     # https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md#3-envelope
