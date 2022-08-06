@@ -3,16 +3,17 @@ import typing
 from abc import abstractmethod
 from typing import Any, List, Union
 
+from starlette.responses import JSONResponse, Response
+
 from cloudevents.abstract import AnyCloudEvent
 from cloudevents.conversion import to_binary
 from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
-from starlette.responses import JSONResponse
 
 from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE
 
 
-class _CloudEventResponse(JSONResponse):
+class _CloudEventResponse:
     @abstractmethod
     def replace_default_source(self, new_source: str):
         pass
@@ -21,7 +22,7 @@ class _CloudEventResponse(JSONResponse):
 RawHeaders = List[Union[bytes, Any]]
 
 
-class StructuredCloudEventResponse(_CloudEventResponse):
+class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
     """
     Nothing to implement because structured CloudEvents are literally json objects
     """
@@ -43,7 +44,7 @@ class StructuredCloudEventResponse(_CloudEventResponse):
         self.raw_headers = list(headers.items())
 
 
-class BinaryCloudEventResponse(_CloudEventResponse):
+class BinaryCloudEventResponse(Response, _CloudEventResponse):
     def __init__(
         self,
         content: typing.Optional[AnyCloudEvent] = None,
