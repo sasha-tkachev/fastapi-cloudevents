@@ -9,7 +9,8 @@ from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse, Response
 
-from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
+from fastapi_cloudevents.cloudevent import (DEFAULT_SOURCE,
+                                            DEFAULT_SOURCE_ENCODED)
 from fastapi_cloudevents.content_type import is_json_content_type_event
 
 
@@ -87,7 +88,7 @@ def _empty_body_value(event: CloudEvent):
 class BinaryCloudEventResponse(Response, _CloudEventResponse):
     def __init__(
         self,
-        content: typing.Optional[Dict[AnyStr, AnyStr]] = None,
+        content: Dict[AnyStr, Any],
         status_code: int = 200,
         headers: dict = None,
         media_type: str = None,
@@ -104,9 +105,7 @@ class BinaryCloudEventResponse(Response, _CloudEventResponse):
         )
         self.raw_headers = self._render_headers(content, headers=self.raw_headers)
 
-    def render(self, content: typing.Optional[typing.Any]) -> bytes:
-        if content is None:
-            return b""
+    def render(self, content: Dict[AnyStr, Any]) -> bytes:
         event = from_dict(content)
         _, body = to_binary(event)
         if body is None:
@@ -114,9 +113,7 @@ class BinaryCloudEventResponse(Response, _CloudEventResponse):
         return body
 
     @classmethod
-    def _render_headers(cls, content: typing.Optional[typing.Any], headers: RawHeaders):
-        if content is None:
-            return headers
+    def _render_headers(cls, content: Dict[AnyStr, Any], headers: RawHeaders):
         ce_headers, _ = to_binary(from_dict(content))
         headers = _update_headers(headers, ce_headers)
         return headers
