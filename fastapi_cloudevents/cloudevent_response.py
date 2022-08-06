@@ -7,11 +7,18 @@ from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse
 
 
-class StructuredCloudEventResponse(JSONResponse):
+class _CloudEventResponse(JSONResponse):
     pass
 
 
-class BinaryCloudEventResponse(JSONResponse):
+class StructuredCloudEventResponse(_CloudEventResponse):
+    """
+    Nothing to implement because structured CloudEvents are literally json objects
+    """
+    pass
+
+
+class BinaryCloudEventResponse(StructuredCloudEventResponse):
     def __init__(
         self,
         content: typing.Optional[AnyCloudEvent] = None,
@@ -46,3 +53,4 @@ class BinaryCloudEventResponse(JSONResponse):
         result = dict(headers)
         result.update(ce_headers)
         return list(result.items())
+
