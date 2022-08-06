@@ -1,8 +1,5 @@
-import json
-
 import pytest
-from cloudevents.conversion import to_binary, to_structured
-from cloudevents.http import CloudEvent, from_http
+from cloudevents.http import from_http
 from starlette.testclient import TestClient
 
 from examples.custom_source_tag.example_server import app
