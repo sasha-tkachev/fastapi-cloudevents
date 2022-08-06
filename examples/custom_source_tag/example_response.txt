@@ -1,0 +1,11 @@
+HTTP/1.1 200 OK
+date: Sat, 06 Aug 2022 01:33:30 GMT
+server: uvicorn
+content-type: application/json
+ce-specversion: 1.0
+ce-id: d6a570df-a68f-4d7f-b0d3-944de01b0214
+ce-source: my-source
+ce-type: my.event.v1
+ce-time: 2022-08-06T01:33:31.090707+00:00
+transfer-encoding: chunked
+
