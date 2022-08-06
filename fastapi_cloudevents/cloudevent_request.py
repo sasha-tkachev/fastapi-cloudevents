@@ -1,5 +1,5 @@
 import json
-from typing import Type
+from typing import Any, Type
 
 from cloudevents.conversion import to_dict, to_json
 from cloudevents.http import CloudEvent, from_http
@@ -27,7 +27,9 @@ def _best_effort_fix_json_data_payload(event: CloudEvent) -> CloudEvent:
 
 class CloudEventRequest(Request):
     _settings: CloudEventSettings = CloudEventSettings()
-
+    _json: Any
+    _body: Any
+    
     async def body(self) -> bytes:
         if not hasattr(self, "_body"):
             body = await super().body()
