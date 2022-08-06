@@ -27,6 +27,10 @@ class StructuredCloudEventResponse(_CloudEventResponse):
         result = json.loads(self.body)
         result["source"] = result["source"].replace(DEFAULT_SOURCE, new_source)
         self.body = self.render(result)
+        content_length = str(len(self.body))
+        headers = dict(self.raw_headers)
+        headers[b"content-length"] = content_length.encode("latin-1")
+        self.raw_headers = list(headers.items())
 
 
 class BinaryCloudEventResponse(_CloudEventResponse):
