@@ -22,6 +22,9 @@ class StructuredCloudEventResponse(_CloudEventResponse):
     Nothing to implement because structured CloudEvents are literally json objects
     """
 
+    # https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md#3-envelope
+    media_type = "application/cloudevents+json"
+
     @abstractmethod
     def replace_default_source(self, new_source: str):
         result = json.loads(self.body)
