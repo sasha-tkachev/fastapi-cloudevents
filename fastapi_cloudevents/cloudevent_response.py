@@ -79,7 +79,9 @@ class BinaryCloudEventResponse(Response, _CloudEventResponse):
             content=content,
             status_code=status_code,
             headers=headers,
-            media_type=media_type,
+            media_type="application/json" if media_type is None else media_type,
+            # the default content type is json, but may be overridden by the event
+            # datacontenttype attribute
             background=background,
         )
         self.raw_headers = self._render_headers(content, headers=self.raw_headers)
