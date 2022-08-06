@@ -36,7 +36,7 @@ class CloudEventRoute(APIRoute):
 
     @classmethod
     def configured(cls, settings: CloudEventSettings) -> Type["CloudEventRoute"]:
-        class ConfiguredCloudEventRoute(CloudEventRoute):
+        class ConfiguredCloudEventRoute(cls):
             _settings: CloudEventSettings = settings
             _request_class = CloudEventRequest.configured(settings)
 
