@@ -12,6 +12,5 @@ class ResponseMode(Enum):
 
 class CloudEventSettings(BaseSettings):
     default_source: Optional[constr(min_length=1)]
-    response_mode: ResponseMode = ResponseMode.binary
+    default_response_mode: ResponseMode = ResponseMode.binary
     create_events_on_behalf_of_the_client: bool = False
-    default_user_event_type: str = "fastapi.client.request.v1"

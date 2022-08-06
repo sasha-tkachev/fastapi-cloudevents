@@ -14,11 +14,11 @@ from fastapi_cloudevents.settings import CloudEventSettings, ResponseMode
 def _choose_default_response_class(
     settings: CloudEventSettings,
 ) -> Type[_CloudEventResponse]:
-    if settings.response_mode == ResponseMode.binary:
+    if settings.default_response_mode == ResponseMode.binary:
         return BinaryCloudEventResponse.configured(settings)
-    if settings.response_mode == ResponseMode.structured:
+    if settings.default_response_mode == ResponseMode.structured:
         return StructuredCloudEventResponse.configured(settings)
-    raise ValueError("Unknown response mode {}".format(settings.response_mode))
+    raise ValueError("Unknown response mode {}".format(settings.default_response_mode))
 
 
 def install_fastapi_cloudevents(
