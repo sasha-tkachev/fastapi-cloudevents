@@ -9,15 +9,14 @@ from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse, Response
 
-from fastapi_cloudevents.cloudevent import (DEFAULT_SOURCE,
-                                            DEFAULT_SOURCE_ENCODED)
+from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
 from fastapi_cloudevents.content_type import is_json_content_type_event
 
 
 class _CloudEventResponse:
     @abstractmethod
     def replace_default_source(self, new_source: str):
-        pass
+        pass  # pragma: no cover
 
 
 RawHeaders = List[Union[bytes, Any]]
