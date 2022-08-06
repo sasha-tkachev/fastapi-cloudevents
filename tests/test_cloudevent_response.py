@@ -36,8 +36,7 @@ def test_update_headers_match_golden_sample(
     given_headers: RawHeaders, new_headers: Dict[AnyStr, AnyStr], expected: RawHeaders
 ):
     result = _update_headers(given_headers, new_headers)
-    for value in expected:  # we cannot test order
-        assert value in result
+    assert set(result) == set(expected)
 
 
 def test_re_rendering_structured_response_should_update_content_length():
