@@ -9,8 +9,7 @@ from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse, Response
 
-from fastapi_cloudevents.cloudevent import (DEFAULT_SOURCE,
-                                            DEFAULT_SOURCE_ENCODED)
+from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
 
 
 class _CloudEventResponse:
@@ -70,7 +69,7 @@ _CE_SOURCE_HEADER_NAME = b"ce-source"
 class BinaryCloudEventResponse(Response, _CloudEventResponse):
     def __init__(
         self,
-        content: typing.Optional[AnyCloudEvent] = None,
+        content: typing.Optional[Dict[AnyStr, AnyStr]] = None,
         status_code: int = 200,
         headers: dict = None,
         media_type: str = None,
