@@ -5,7 +5,7 @@ from cloudevents.conversion import to_dict, to_json
 from cloudevents.http import CloudEvent, from_http
 from starlette.requests import Request
 
-from fastapi_cloudevents import CloudEventSettings
+from fastapi_cloudevents.settings import CloudEventSettings
 from fastapi_cloudevents.content_type import is_json_content_type_event
 
 
