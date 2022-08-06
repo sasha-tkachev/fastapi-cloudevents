@@ -1,7 +1,7 @@
+import typing
+
 import cloudevents.pydantic
 import pydantic
-
-from fastapi_cloudevents.source_injection_middleware import SOURCE_INJECTION_MAGIC
 
 
 class CloudEvent(cloudevents.pydantic.CloudEvent):
@@ -10,8 +10,7 @@ class CloudEvent(cloudevents.pydantic.CloudEvent):
     The source will be injected via the CloudEvent response class.
     """
 
-    source: str = pydantic.Field(
-        default=SOURCE_INJECTION_MAGIC,
+    source: typing.Optional[str] = pydantic.Field(
         title="Event Source",
         description=(
             "Identifies the context in which an event happened. Often this will include"

@@ -1,8 +1,6 @@
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
-SOURCE_INJECTION_MAGIC = "{url}"
-
 
 class BinarySourceInjectionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
@@ -10,9 +8,7 @@ class BinarySourceInjectionMiddleware(BaseHTTPMiddleware):
 
         source = response.headers.get("ce-source")
         if source is not None:
-            response.headers["ce-source"] = source.replace(
-                SOURCE_INJECTION_MAGIC, str(request.url)
-            )
+            response.headers["ce-source"] = source.replace("{url}", str(request.url))
         return response
 
 
