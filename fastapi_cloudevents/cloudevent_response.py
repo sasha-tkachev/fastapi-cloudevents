@@ -1,15 +1,18 @@
 import json
 import typing
 from abc import abstractmethod
-from typing import Any, AnyStr, Dict, List, Optional, Union
+from typing import Any, AnyStr, Dict, List, Union
 
-from cloudevents.abstract import AnyCloudEvent
 from cloudevents.conversion import to_binary
 from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse, Response
 
 from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
+from fastapi_cloudevents.content_type import (
+    _is_json_content_type,
+    is_json_content_type_event,
+)
 
 
 class _CloudEventResponse:
@@ -89,9 +92,13 @@ class BinaryCloudEventResponse(Response, _CloudEventResponse):
     def render(self, content: typing.Optional[typing.Any]) -> bytes:
         if content is None:
             return b""
-        _, body = to_binary(from_dict(content))
+        event = from_dict(content)
+        _, body = to_binary(event)
         if body is None:
-            return b""
+            if is_json_content_type_event(event):
+                return b"null"  # empty buffer is not a valid json value
+            else:
+                return b""
         return body
 
     @classmethod
