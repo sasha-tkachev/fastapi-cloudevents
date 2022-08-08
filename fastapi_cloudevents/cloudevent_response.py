@@ -42,10 +42,6 @@ def _update_headers(
 
 
 class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
-    """
-    Nothing to implement because structured CloudEvents are literally json objects
-    """
-
     _settings: CloudEventSettings = CloudEventSettings()
 
     # starlette response does not init it in __init__ directly, so we need to hint it
