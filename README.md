@@ -21,7 +21,7 @@ The reason for it is because it requires the unreleased [pydantic feature](https
 
 If you wish to try out the beta version use
 ```
-pip install fastapi-cloudevents --no-deps
+python setup.py develop
 ```
 and install the [development branch of the pydantic feature](https://github.com/cloudevents/sdk-python/pull/182)
 
