@@ -16,14 +16,13 @@ See more examples below
 
 ### Install
 This package currently cannot be installed directly from pypi. 
-The reason for it is because it requires the unreleased [pydantic feature](https://github.com/cloudevents/sdk-python/issues/181) in the
- [cloudevents python sdk](https://github.com/cloudevents/sdk-python)  
+The reason for it is because it requires the yet unreleased [cloudevents pythond-sdk version](https://github.com/cloudevents/sdk-python/pull/189) 
 
 If you wish to try out the beta version use
 ```
 python setup.py develop
 ```
-and install the [development branch of the pydantic feature](https://github.com/cloudevents/sdk-python/pull/182)
+And install the [main branch](https://github.com/cloudevents/sdk-python/tree/main) of the pythond-sdk
 
 
    
