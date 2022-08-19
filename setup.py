@@ -38,7 +38,7 @@ setuptools.setup(
         "Intended Audience :: System Administrators",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
-        "Development Status :: 1 - Planning",
+        "Development Status :: 5 - Production/Stable",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
