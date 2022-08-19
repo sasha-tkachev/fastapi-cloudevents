@@ -15,7 +15,7 @@ setuptools.setup(
     version="1.0.0",
     author="Alexander Tkachev",
     author_email="sasha64sasha@gmail.com",
-    description="FastAPI CloudEvents Middleware",
+    description="FastAPI plugin for CloudEvents Integration",
     url="https://github.com/sasha-tkachev/fastapi-cloudevents",
     keywords=[
         "fastapi",
