@@ -10,6 +10,9 @@ def _read_requirements(filename):
     ]
 
 
+here = Path(__file__).parent.resolve()
+long_description = (here / "README.md").read_text(encoding="utf-8")
+
 if __name__ == '__main__':
     setuptools.setup(
         name="fastapi-cloudevents",
@@ -17,6 +20,8 @@ if __name__ == '__main__':
         author="Alexander Tkachev",
         author_email="sasha64sasha@gmail.com",
         description="FastAPI plugin for CloudEvents Integration",
+        long_description_content_type="text/markdown",
+        long_description=long_description,
         home_page="https://github.com/sasha-tkachev/fastapi-cloudevents",
         url="https://github.com/sasha-tkachev/fastapi-cloudevents",
         keywords=[
