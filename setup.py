@@ -46,13 +46,4 @@ setuptools.setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
-    test_suite="tests",
-    extras_require={
-        "tests": [
-            "pytest",
-            "pytest-cov",
-            "coverage",
-            "flake8",
-        ]
-    },
 )
