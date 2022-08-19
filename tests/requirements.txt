@@ -6,3 +6,4 @@ flake8-strict
 pytest
 pytest-cov
 requests
+uvicorn
