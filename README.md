@@ -15,16 +15,9 @@ async def on_event(event: CloudEvent) -> CloudEvent:
 See more examples below
 
 ### Install
-This package currently cannot be installed directly from pypi. 
-The reason for it is because it requires the yet unreleased [cloudevents pythond-sdk version](https://github.com/cloudevents/sdk-python/pull/189) 
-
-If you wish to try out the beta version use
+```shell script
+pip install fastapi-cloudevents
 ```
-python setup.py develop
-```
-And install the [main branch](https://github.com/cloudevents/sdk-python/tree/main) of the pythond-sdk
-
-
    
 ## Examples
 
