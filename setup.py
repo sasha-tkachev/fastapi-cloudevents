@@ -20,12 +20,16 @@ setuptools.setup(
     keywords=[
         "fastapi",
         "cloudevents",
-        "k8s",
         "ce",
         "cloud",
         "events",
         "event",
         "middleware",
+        "rest",
+        "rest-api",
+        "plugin",
+        "pydantic",
+        "fastapi-extension"
     ],
     packages=setuptools.find_packages(),
     install_requires=_read_requirements("requirements.txt"),
