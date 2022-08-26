@@ -11,8 +11,7 @@ from starlette.background import BackgroundTask
 from starlette.responses import JSONResponse, Response
 
 from fastapi_cloudevents.settings import CloudEventSettings
-from fastapi_cloudevents.cloudevent import (DEFAULT_SOURCE,
-                                            DEFAULT_SOURCE_ENCODED)
+from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
 from fastapi_cloudevents.content_type import is_json_content_type_event
 
 
@@ -144,7 +143,9 @@ class BinaryCloudEventResponse(JSONResponse, _CloudEventResponse):
             )
 
     @classmethod
-    def configured(cls, settings: CloudEventSettings) -> Type["_CloudEventResponse"]:
+    def configured(
+        cls, settings: CloudEventSettings
+    ) -> Type["BinaryCloudEventResponse"]:
         class ConfiguredBinaryCloudEventResponse(cls):
             _settings = settings
 
