@@ -33,6 +33,13 @@ def test_certain_examples_should_appear_in_readme(example_file: str):
 
 
 def test_coverage_badge_must_represent_correct_coverage():
+    """
+    It is easier to enforce a strict coverage in our tests and project it into
+    the documentation rather then to relay on third party Coverage calculation systems.
+
+    This test exists to make sure that future developers will not update one thing and
+    not the other.
+    """
     enforced_coverage = int(
         re.search(r"--cov-fail-under=(?P<percent>[0-9]+)", tox_config).groupdict()[
             "percent"
@@ -46,4 +53,4 @@ def test_coverage_badge_must_represent_correct_coverage():
             readme,
         ).groupdict()["percent"]
     )
-    assert badge_coverage <= enforced_coverage
+    assert badge_coverage == enforced_coverage
