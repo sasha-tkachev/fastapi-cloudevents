@@ -1,5 +1,5 @@
 # fastapi-cloudevents
-![](https://img.shields.io/badge/coverage-100%25-brightgreen)
+[![](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/sasha-tkachev/fastapi-cloudevents/blob/main/tests/test_docs.py#L35)
 
 [FastAPI](https://fastapi.tiangolo.com/) plugin for [CloudEvents](https://cloudevents.io/) Integration
 
