@@ -1,9 +1,15 @@
 import json
+
+from cloudevents.exceptions import MissingRequiredFields
 from typing import AnyStr, Dict
 
 import pytest
 
-from fastapi_cloudevents import BinaryCloudEventResponse, StructuredCloudEventResponse
+from fastapi_cloudevents import (
+    BinaryCloudEventResponse,
+    StructuredCloudEventResponse,
+    CloudEventSettings,
+)
 from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE
 from fastapi_cloudevents.cloudevent_response import (
     RawHeaders,
@@ -116,7 +122,7 @@ def test_structured_replace_default_source_matches_golden_sample(
                 (b"ce-time", b"1"),
                 (b"ce-type", b"dummy"),
                 (b"content-type", b"application/json"),
-                (b'content-length', b'4'),
+                (b"content-length", b"4"),
             ],
             id="non default source must not be replaced",
         ),
@@ -131,7 +137,7 @@ def test_structured_replace_default_source_matches_golden_sample(
                 (b"ce-time", b"1"),
                 (b"ce-type", b"dummy"),
                 (b"content-type", b"application/json"),
-                (b'content-length', b'4'),
+                (b"content-length", b"4"),
             ],
             id="default source should be replaced",
         ),
@@ -151,7 +157,7 @@ def test_structured_replace_default_source_matches_golden_sample(
                 (b"ce-time", b"1"),
                 (b"ce-type", b"dummy"),
                 (b"content-type", b"application/json"),
-                (b'content-length', b'4'),
+                (b"content-length", b"4"),
             ],
             id=(
                 "sources which contain the default source as a sub string must not be "
@@ -191,3 +197,23 @@ def test_binary_response_given_empty_data_return_golden_empty_value(
         ).body
         == expected_value
     )
+
+
+_INVALID_CLOUDEVENT_CONTENT = {"a": "b"}
+
+
+def test_when_allowed_rendering_invalid_cloudevent_binary_response_must_rendered_to_json():
+    CloudEventSettings(allow_non_cloudevent_models=True)
+    assert (
+        json.loads(BinaryCloudEventResponse.configured(
+            CloudEventSettings(allow_non_cloudevent_models=True)
+        )({}).render(_INVALID_CLOUDEVENT_CONTENT))
+        == _INVALID_CLOUDEVENT_CONTENT
+    )
+
+
+def test_when_disallowed_rendering_invalid_cloudevent_binary_response_must_fail():
+    with pytest.raises(MissingRequiredFields):
+        BinaryCloudEventResponse.configured(
+            CloudEventSettings(allow_non_cloudevent_models=False)
+        )({}).render(_INVALID_CLOUDEVENT_CONTENT)
