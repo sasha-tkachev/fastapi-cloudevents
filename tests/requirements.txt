@@ -7,3 +7,4 @@ pytest
 pytest-cov
 requests
 uvicorn
+pytest-asyncio
