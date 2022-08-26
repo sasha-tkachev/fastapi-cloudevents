@@ -1,4 +1,6 @@
 # fastapi-cloudevents
+![](https://img.shields.io/badge/coverage-100%25-brightgreen)
+
 [FastAPI](https://fastapi.tiangolo.com/) plugin for [CloudEvents](https://cloudevents.io/) Integration
 
 Allows to easily consume and produce CloudEvents over REST API. 
