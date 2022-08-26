@@ -217,3 +217,10 @@ def test_when_disallowed_rendering_invalid_cloudevent_binary_response_must_fail(
         BinaryCloudEventResponse.configured(
             CloudEventSettings(allow_non_cloudevent_models=False)
         )({}).render(_INVALID_CLOUDEVENT_CONTENT)
+
+
+def test_when_disallowed_rendering_invalid_cloudevent_binary_headers_must_fail():
+    with pytest.raises(MissingRequiredFields):
+        BinaryCloudEventResponse.configured(
+            CloudEventSettings(allow_non_cloudevent_models=False)
+        )._render_headers(_INVALID_CLOUDEVENT_CONTENT, [])
