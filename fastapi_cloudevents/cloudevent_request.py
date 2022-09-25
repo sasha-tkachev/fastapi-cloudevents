@@ -39,7 +39,9 @@ class CloudEventRequest(Request):
                     from_http(dict(self.headers), body)
                 )
                 self._json = to_dict(event)
-                self._body = to_json(event)
+                # avoid fastapi>=0.66 content type check
+                # https://github.com/sasha-tkachev/fastapi-cloudevents/issues/5
+                self._body = self._json
             except MissingRequiredFields:
                 if self._settings.allow_non_cloudevent_models:
                     # This is not a CloudEvent, maybe some other model, will let FastAPI
