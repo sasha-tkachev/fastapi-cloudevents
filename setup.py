@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import setuptools
 
 
@@ -26,7 +27,7 @@ if __name__ == "__main__":
         url="https://github.com/sasha-tkachev/fastapi-cloudevents",
         keywords=[
             "fastapi",
-            "cloudevents",
+            "cloudevents[pydantic]",
             "ce",
             "cloud",
             "events",
