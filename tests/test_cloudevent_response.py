@@ -205,9 +205,11 @@ _INVALID_CLOUDEVENT_CONTENT = {"a": "b"}
 def test_when_allowed_rendering_invalid_cloudevent_binary_response_must_rendered_to_json():
     CloudEventSettings(allow_non_cloudevent_models=True)
     assert (
-        json.loads(BinaryCloudEventResponse.configured(
-            CloudEventSettings(allow_non_cloudevent_models=True)
-        )({}).render(_INVALID_CLOUDEVENT_CONTENT))
+        json.loads(
+            BinaryCloudEventResponse.configured(
+                CloudEventSettings(allow_non_cloudevent_models=True)
+            )({}).render(_INVALID_CLOUDEVENT_CONTENT)
+        )
         == _INVALID_CLOUDEVENT_CONTENT
     )
 

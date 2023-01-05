@@ -6,7 +6,9 @@ from cloudevents.http import CloudEvent
 
 from fastapi_cloudevents import CloudEventRequest, CloudEventSettings
 from fastapi_cloudevents.cloudevent_request import (
-    _best_effort_fix_json_data_payload, _should_fix_json_data_payload)
+    _best_effort_fix_json_data_payload,
+    _should_fix_json_data_payload,
+)
 
 
 @pytest.mark.parametrize(

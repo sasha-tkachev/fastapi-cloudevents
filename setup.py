@@ -13,7 +13,7 @@ def _read_requirements(filename):
 here = Path(__file__).parent.resolve()
 long_description = (here / "README.md").read_text(encoding="utf-8")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     setuptools.setup(
         name="fastapi-cloudevents",
         version="1.0.3",
@@ -36,7 +36,7 @@ if __name__ == '__main__':
             "rest-api",
             "plugin",
             "pydantic",
-            "fastapi-extension"
+            "fastapi-extension",
         ],
         packages=setuptools.find_packages(),
         install_requires=_read_requirements("requirements.txt"),

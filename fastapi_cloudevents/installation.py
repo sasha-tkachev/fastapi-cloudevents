@@ -5,8 +5,7 @@ from typing import Optional, Type
 from fastapi import FastAPI
 from starlette.responses import JSONResponse
 
-from fastapi_cloudevents import (BinaryCloudEventResponse,
-                                 StructuredCloudEventResponse)
+from fastapi_cloudevents import BinaryCloudEventResponse, StructuredCloudEventResponse
 from fastapi_cloudevents.cloudevent_response import _CloudEventResponse
 from fastapi_cloudevents.cloudevent_route import CloudEventRoute
 from fastapi_cloudevents.settings import CloudEventSettings, ContentMode

@@ -38,8 +38,14 @@ _EXPECTED_RESPONSE_HEADER_VALUES = {
 @pytest.mark.parametrize("to_http", (to_binary, to_structured))
 def test_binary_request_is_in_binary_format(client, to_http):
     headers, data = to_http(
-        CloudEvent({"type": _DUMMY_TYPE, "source": _DUMMY_SOURCE, "datacontenttype": _DUMMY_CONTENT_TYPE},
-                   _DUMMY_DATA)
+        CloudEvent(
+            {
+                "type": _DUMMY_TYPE,
+                "source": _DUMMY_SOURCE,
+                "datacontenttype": _DUMMY_CONTENT_TYPE,
+            },
+            _DUMMY_DATA,
+        )
     )
     response = client.post("/", headers=headers, data=data)
     assert response.status_code == 200
