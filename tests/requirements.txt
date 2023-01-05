@@ -8,3 +8,4 @@ pytest-cov
 requests
 uvicorn
 pytest-asyncio
+httpx
