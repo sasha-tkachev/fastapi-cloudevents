@@ -19,7 +19,7 @@ async def on_event(event: CloudEvent) -> CloudEvent:
 
 See more examples below
 
-### Install
+### 🔨 Installation
 
 ```shell script
 pip install fastapi-cloudevents
@@ -27,7 +27,7 @@ pip install fastapi-cloudevents
 
 ## Examples
 
-### [Simple Example](examples/simple_server)
+### 👶 [Simple Example](examples/simple_server)
 
 ```python
 import uvicorn
@@ -87,7 +87,7 @@ ce-time: 2022-08-05T23:50:52.809697+00:00
 "Hello World"
 ```
 
-### [CloudEvent Type Routing](examples/type_routing)
+### 🔀 [CloudEvent Type Routing Example](examples/type_routing)
 
 ```python
 from typing import Literal, Union
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8002)
 ```
 
-### [Structured Response Example](examples/structured_response_server)
+### 🏠 [Structured Response Example](examples/structured_response_server)
 
 To send the response in the http CloudEvent structured format, you MAY use the
  `BinaryCloudEventResponse` class
@@ -188,7 +188,7 @@ content-type: application/json
 {"data":"Hello World!","source":"http://localhost:8001/","id":"3412321f-85b3-4f7f-a551-f4c23a05de3a","type":"com.my-corp.response.v1","specversion":"1.0","time":"2022-08-05T23:51:26.878723+00:00","datacontenttype":"text/plain"}
 ```
 
-## More Examples
+## 📚 More Examples
 
 * [Custom Default Source](examples/custom_default_source)
 * [Mixed Usage of events and regular models](examples/events_and_basemodels_mixed)
