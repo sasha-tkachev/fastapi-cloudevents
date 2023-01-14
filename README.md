@@ -1,4 +1,4 @@
-# fastapi-cloudevents
+# ⛅ fastapi-cloudevents
 
 [![](https://github.com/sasha-tkachev/fastapi-cloudevents/actions/workflows/main.yaml/badge.svg)](https://github.com/sasha-tkachev/fastapi-cloudevents/actions/workflows/main.yaml)
 [![](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/sasha-tkachev/fastapi-cloudevents/blob/main/tests/test_docs.py#L35)
