@@ -17,7 +17,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 if __name__ == "__main__":
     setuptools.setup(
         name="fastapi-cloudevents",
-        version="1.1.0",
+        version="2.0.0",
         author="Alexander Tkachev",
         author_email="sasha64sasha@gmail.com",
         description="FastAPI plugin for CloudEvents Integration",
