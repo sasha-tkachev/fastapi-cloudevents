@@ -11,10 +11,10 @@ Automatically parses CloudEvents both in the binary and structured format and
 provides an interface very similar to the regular FastAPI interface. No more
 hustling with `to_structured` and `from_http` function calls!
 
- ```python
+```python
 @app.post("/")
 async def on_event(event: CloudEvent) -> CloudEvent:
-    pass
+   pass
 ```
 
 See more examples below
@@ -93,12 +93,16 @@ ce-time: 2022-08-05T23:50:52.809697+00:00
 from typing import Literal, Union
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from pydantic import Field
 from typing_extensions import Annotated
 
-from fastapi_cloudevents import (CloudEvent, CloudEventSettings, ContentMode,
-                                 install_fastapi_cloudevents)
+from fastapi_cloudevents import (
+    CloudEvent,
+    CloudEventSettings,
+    ContentMode,
+    install_fastapi_cloudevents,
+)
 
 app = FastAPI()
 app = install_fastapi_cloudevents(
@@ -114,7 +118,7 @@ class YourEvent(CloudEvent):
     type: Literal["your.type.v1"]
 
 
-OurEvent = Annotated[Union[MyEvent, YourEvent], Field(discriminator="type")]
+OurEvent = Annotated[Union[MyEvent, YourEvent], Body(discriminator="type")]
 
 _source = "dummy:source"
 
@@ -142,7 +146,7 @@ if __name__ == "__main__":
 ### [Structured Response Example](examples/structured_response_server)
 
 To send the response in the http CloudEvent structured format, you MAY use the
- `BinaryCloudEventResponse` class
+`BinaryCloudEventResponse` class
 
 ```python
 import uvicorn
@@ -190,5 +194,5 @@ content-type: application/json
 
 ## More Examples
 
-* [Custom Default Source](examples/custom_default_source)
-* [Mixed Usage of events and regular models](examples/events_and_basemodels_mixed)
+- [Custom Default Source](examples/custom_default_source)
+- [Mixed Usage of events and regular models](examples/events_and_basemodels_mixed)
