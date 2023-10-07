@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Type
+from typing import Callable, Type
 
 from fastapi.routing import APIRoute
 from starlette.requests import Request

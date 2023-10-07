@@ -8,7 +8,7 @@ from cloudevents.conversion import to_binary
 from cloudevents.exceptions import MissingRequiredFields
 from cloudevents.http import from_dict
 from starlette.background import BackgroundTask
-from starlette.responses import JSONResponse, Response
+from starlette.responses import JSONResponse
 
 from fastapi_cloudevents.settings import CloudEventSettings
 from fastapi_cloudevents.cloudevent import DEFAULT_SOURCE, DEFAULT_SOURCE_ENCODED
