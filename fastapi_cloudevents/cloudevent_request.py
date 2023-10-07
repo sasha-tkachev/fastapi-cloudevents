@@ -1,7 +1,7 @@
 import json
 from typing import Any, Type
 
-from cloudevents.conversion import to_dict, to_json
+from cloudevents.conversion import to_dict
 from cloudevents.exceptions import MissingRequiredFields
 from cloudevents.http import CloudEvent, from_http
 from starlette.requests import Request
