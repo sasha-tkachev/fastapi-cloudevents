@@ -16,13 +16,14 @@ class MyModel(BaseModel):
 async def on_event(value: MyModel) -> CloudEvent:
     return CloudEvent(
         type="my.model-acknowledged.v1",
-        data=value,
+        data=value.model_dump(),
     )
 
 
 @app.post("/model-response")
 async def on_event(value: MyModel) -> MyModel:
-    return value
+    return value.model_dump()
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8004)

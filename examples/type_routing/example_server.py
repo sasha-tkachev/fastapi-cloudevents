@@ -1,12 +1,16 @@
 from typing import Literal, Union
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from pydantic import Field
 from typing_extensions import Annotated
 
-from fastapi_cloudevents import (CloudEvent, CloudEventSettings, ContentMode,
-                                 install_fastapi_cloudevents)
+from fastapi_cloudevents import (
+    CloudEvent,
+    CloudEventSettings,
+    ContentMode,
+    install_fastapi_cloudevents,
+)
 
 app = FastAPI()
 app = install_fastapi_cloudevents(
@@ -22,7 +26,7 @@ class YourEvent(CloudEvent):
     type: Literal["your.type.v1"]
 
 
-OurEvent = Annotated[Union[MyEvent, YourEvent], Field(discriminator="type")]
+OurEvent = Annotated[Union[MyEvent, YourEvent], Body(discriminator="type")]
 
 _source = "dummy:source"
 
