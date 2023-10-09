@@ -40,6 +40,7 @@ if __name__ == "__main__":
             "fastapi-extension",
         ],
         packages=setuptools.find_packages(),
+        package_data={"fastapi_cloudevents": ["py.typed"]},
         install_requires=_read_requirements("requirements.txt"),
         classifiers=[
             "Intended Audience :: Information Technology",
