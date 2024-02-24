@@ -64,7 +64,7 @@ class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
 
     @classmethod
     def configured(cls, settings: CloudEventSettings) -> Type["_CloudEventResponse"]:
-        class ConfiguredStructuredCloudEventResponse(cls):
+        class ConfiguredStructuredCloudEventResponse(cls):  # type: ignore # it is valid
             _settings = settings
 
         return ConfiguredStructuredCloudEventResponse
@@ -146,7 +146,7 @@ class BinaryCloudEventResponse(JSONResponse, _CloudEventResponse):
     def configured(
         cls, settings: CloudEventSettings
     ) -> Type["BinaryCloudEventResponse"]:
-        class ConfiguredBinaryCloudEventResponse(cls):
+        class ConfiguredBinaryCloudEventResponse(cls):  # type: ignore # it is valid
             _settings = settings
 
         return ConfiguredBinaryCloudEventResponse
