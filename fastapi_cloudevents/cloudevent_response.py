@@ -97,9 +97,9 @@ class BinaryCloudEventResponse(JSONResponse, _CloudEventResponse):
         self,
         content: Dict[AnyStr, Any],
         status_code: int = 200,
-        headers: dict = None,
-        media_type: str = None,
-        background: BackgroundTask = None,
+        headers: dict = None,  # type: ignore # same as JSONResponse
+        media_type: str = None,  # type: ignore # same as JSONResponse
+        background: BackgroundTask = None,  # type: ignore # same as JSONResponse
     ) -> None:
         super(BinaryCloudEventResponse, self).__init__(
             content=content,
