@@ -10,7 +10,7 @@ from fastapi_cloudevents.content_type import is_json_content_type_event
 from fastapi_cloudevents.settings import CloudEventSettings
 
 
-def _should_fix_json_data_payload(event: CloudEvent):
+def _should_fix_json_data_payload(event: CloudEvent) -> bool:
     if isinstance(event.data, (str, bytes)):
         return is_json_content_type_event(event)
     else:
@@ -20,7 +20,9 @@ def _should_fix_json_data_payload(event: CloudEvent):
 def _best_effort_fix_json_data_payload(event: CloudEvent) -> CloudEvent:
     try:
         if _should_fix_json_data_payload(event):
-            event.data = json.loads(event.data)
+            event.data = json.loads(
+                event.data,  # type: ignore # MUST be str or bytes
+            )
     except (json.JSONDecodeError, TypeError, UnicodeDecodeError):
         pass
     return event
