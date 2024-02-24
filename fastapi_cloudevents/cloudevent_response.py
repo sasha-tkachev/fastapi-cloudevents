@@ -1,7 +1,7 @@
 import json
 import typing
 from abc import abstractmethod
-from typing import Any, AnyStr, Dict, List, Type, Union
+from typing import Any, AnyStr, Dict, List, Type, Tuple
 
 from cloudevents.abstract import CloudEvent
 from cloudevents.conversion import to_binary
@@ -21,7 +21,7 @@ class _CloudEventResponse:
         pass  # pragma: no cover
 
 
-RawHeaders = List[Union[bytes, Any]]
+RawHeaders = List[Tuple[bytes, Any]]
 
 
 def _encoded_string(s: AnyStr) -> bytes:
