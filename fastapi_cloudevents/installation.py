@@ -30,7 +30,8 @@ def install_fastapi_cloudevents(
         settings = CloudEventSettings()
     if app.router.default_response_class != JSONResponse:
         logger.warning("overriding custom non json response default response class")
-    app.router.default_response_class = _choose_default_response_class(settings)
+    default_response_class = _choose_default_response_class(settings)
+    app.router.default_response_class = default_response_class  # type: ignore
 
     app.router.route_class = CloudEventRoute.configured(settings)
     return app
