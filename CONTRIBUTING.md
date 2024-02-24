@@ -10,4 +10,4 @@ a few things to keep in mind.
 
 Typically a pull request should relate to an existing issue. If you have
 found a bug, want to add an improvement, or suggest an API change, you MAY
-create an issue before proceeding with a pull request, but it is not requried.
+create an issue before proceeding with a pull request, but it is not required.
