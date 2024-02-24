@@ -114,7 +114,9 @@ class BinaryCloudEventResponse(JSONResponse, _CloudEventResponse):
 
     def render(self, content: Dict[AnyStr, Any]) -> bytes:
         try:
-            event = from_dict(content)
+            event = from_dict(
+                content,  # type: ignore
+            )
             _, body = to_binary(event)
             if body is None:
                 return _empty_body_value(event)
@@ -128,7 +130,11 @@ class BinaryCloudEventResponse(JSONResponse, _CloudEventResponse):
     @classmethod
     def _render_headers(cls, content: Dict[AnyStr, Any], headers: RawHeaders):
         try:
-            ce_headers, _ = to_binary(from_dict(content))
+            ce_headers, _ = to_binary(
+                from_dict(
+                    content,  # type: ignore
+                )
+            )
             headers = _update_headers(headers, ce_headers)
         except MissingRequiredFields:
             if not cls._settings.allow_non_cloudevent_models:
