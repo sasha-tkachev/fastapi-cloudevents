@@ -33,11 +33,11 @@ def _encoded_string(s: AnyStr) -> bytes:
 def _update_headers(
     headers: RawHeaders, new_headers: Dict[AnyStr, AnyStr]
 ) -> RawHeaders:
-    headers = dict(headers)
-    headers.update(
+    result = dict(headers)
+    result.update(
         {_encoded_string(k).lower(): _encoded_string(v) for k, v in new_headers.items()}
     )
-    return list(headers.items())
+    return list(result.items())
 
 
 class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
