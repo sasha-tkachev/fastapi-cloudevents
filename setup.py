@@ -42,6 +42,7 @@ if __name__ == "__main__":
         packages=setuptools.find_packages(),
         package_data={"fastapi_cloudevents": ["py.typed"]},
         install_requires=_read_requirements("requirements.txt"),
+        extras_require={"dev": ["mypy"]},
         classifiers=[
             "Intended Audience :: Information Technology",
             "Intended Audience :: System Administrators",

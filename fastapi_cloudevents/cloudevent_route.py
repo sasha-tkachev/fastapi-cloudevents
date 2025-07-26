@@ -1,4 +1,4 @@
-from typing import Callable, Type
+from typing import Any, Callable, Coroutine, Type
 
 from fastapi.routing import APIRoute
 from starlette.requests import Request
@@ -9,7 +9,7 @@ from fastapi_cloudevents.cloudevent_response import _CloudEventResponse
 from fastapi_cloudevents.settings import CloudEventSettings
 
 
-def _route_source(request: Request, settings: CloudEventSettings):
+def _route_source(request: Request, settings: CloudEventSettings) -> str:
     if settings.default_source:
         return settings.default_source
     return str(request.url)
@@ -19,7 +19,7 @@ class CloudEventRoute(APIRoute):
     _settings: CloudEventSettings = CloudEventSettings()
     _request_class: Type[CloudEventRequest] = CloudEventRequest
 
-    def get_route_handler(self) -> Callable:
+    def get_route_handler(self) -> Callable[[Request], Coroutine[Any, Any, Response]]:
         original_route_handler = super().get_route_handler()
 
         async def custom_route_handler(request: Request) -> Response:

@@ -21,7 +21,7 @@ def _best_effort_fix_json_data_payload(event: CloudEvent) -> CloudEvent:
     try:
         if _should_fix_json_data_payload(event):
             event.data = json.loads(
-                event.data,  # type: ignore # MUST be str or bytes
+                event.data,
             )
     except (json.JSONDecodeError, TypeError, UnicodeDecodeError):
         pass
@@ -51,7 +51,7 @@ class CloudEventRequest(Request):
                     self._body = body
                 else:
                     raise
-        return self._body
+        return self._body  # type: ignore
 
     @classmethod
     def configured(cls, settings: CloudEventSettings) -> Type["CloudEventRequest"]:

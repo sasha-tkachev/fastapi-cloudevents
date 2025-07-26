@@ -17,7 +17,7 @@ from fastapi_cloudevents.content_type import is_json_content_type_event
 
 class _CloudEventResponse:
     @abstractmethod
-    def replace_default_source(self, new_source: str):
+    def replace_default_source(self, new_source: str) -> None:
         pass  # pragma: no cover
 
 
@@ -42,6 +42,7 @@ def _update_headers(
 
 class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
     _settings: CloudEventSettings = CloudEventSettings()
+    body: bytes
 
     # starlette response does not init it in __init__ directly, so we need to hint it
     raw_headers: RawHeaders
@@ -49,14 +50,14 @@ class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
     # https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md#3-envelope
     media_type = "application/cloudevents+json"
 
-    def replace_default_source(self, new_source: str):
+    def replace_default_source(self, new_source: str) -> None:
         result = json.loads(self.body)
         if result.get("source") == DEFAULT_SOURCE:
             result["source"] = new_source
         self._re_render(result)
 
     def _re_render(self, content: typing.Any) -> None:
-        self.body = self.render(content)
+        self.body: bytes = self.render(content)
         content_length = str(len(self.body))
         self.raw_headers = _update_headers(
             self.raw_headers, {b"content-length": content_length.encode("latin-1")}
@@ -73,7 +74,7 @@ class StructuredCloudEventResponse(JSONResponse, _CloudEventResponse):
 _CE_SOURCE_HEADER_NAME = b"ce-source"
 
 
-def _empty_body_value(event: CloudEvent):
+def _empty_body_value(event: CloudEvent) -> bytes:
     """
     We MUST return a non-None http payload to the client, but the to_binary
     function returned None.
@@ -128,7 +129,7 @@ class BinaryCloudEventResponse(JSONResponse, _CloudEventResponse):
                 raise
 
     @classmethod
-    def _render_headers(cls, content: Dict[AnyStr, Any], headers: RawHeaders):
+    def _render_headers(cls, content: Dict[AnyStr, Any], headers: RawHeaders) -> RawHeaders:
         try:
             ce_headers, _ = to_binary(
                 from_dict(
@@ -142,7 +143,7 @@ class BinaryCloudEventResponse(JSONResponse, _CloudEventResponse):
 
         return headers
 
-    def replace_default_source(self, new_source: str):
+    def replace_default_source(self, new_source: str) -> None:
         if (_CE_SOURCE_HEADER_NAME, DEFAULT_SOURCE_ENCODED) in self.raw_headers:
             self.raw_headers = _update_headers(
                 self.raw_headers, {_CE_SOURCE_HEADER_NAME: new_source.encode("utf-8")}
